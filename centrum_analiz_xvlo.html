@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XV LO Poznań — Centrum Analiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #0d1520;
+  --ink2:   #182030;
+  --card:   #131d2c;
+  --card2:  #1a2840;
+  --border: rgba(255,255,255,0.07);
+  --text:   #dce8f5;
+  --muted:  #6b829c;
+  --gold:   #f0b429;
+  --red:    #e05252;
+  --green:  #27ae73;
+  --blue:   #3a85c8;
+  --purple: #8b7fe8;
+  --teal:   #0fb8a0;
+  --orange: #e87a30;
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 64px 40px 52px;
+  background: linear-gradient(150deg, #0d1520 0%, #0c1e38 55%, #0d1520 100%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-grid {
+  position:absolute; inset:0; opacity:.035;
+  background-image:
+    linear-gradient(var(--blue) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blue) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hero-glow {
+  position:absolute; top:-120px; right:-80px;
+  width:520px; height:520px;
+  background: radial-gradient(circle, rgba(58,133,200,.12) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  color:var(--gold); margin-bottom:20px;
+}
+.hero-badge::before { content:''; width:28px; height:1px; background:var(--gold); }
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size: clamp(28px,5vw,54px);
+  font-weight:900; line-height:1.08;
+  margin-bottom:14px;
+}
+.hero h1 em { font-style:italic; color:var(--gold); }
+.hero-desc {
+  color:var(--muted); font-size:14px; line-height:1.7;
+  max-width:600px; margin-bottom:36px;
+}
+.hero-stats {
+  display:flex; gap:32px; flex-wrap:wrap;
+}
+.hero-stat-item { display:flex; flex-direction:column; gap:3px; }
+.hero-stat-val {
+  font-family:'Playfair Display',serif;
+  font-size:28px; font-weight:700; line-height:1;
+}
+.hero-stat-lbl { font-size:11px; color:var(--muted); font-weight:500; }
+
+/* ── NAV ── */
+.sticky-nav {
+  position:sticky; top:0; z-index:100;
+  background: rgba(13,21,32,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display:flex; gap:4px; overflow-x:auto;
+  scrollbar-width:none;
+}
+.sticky-nav::-webkit-scrollbar { display:none; }
+.nav-pill {
+  padding: 13px 18px;
+  font-size:12.5px; font-weight:600;
+  color:var(--muted); cursor:pointer;
+  white-space:nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+  text-decoration:none; display:block;
+}
+.nav-pill:hover { color:var(--text); }
+.nav-pill.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* ── MAIN ── */
+.wrap { padding:40px 40px 80px; max-width:1200px; margin:0 auto; }
+
+/* ── SECTION TITLE ── */
+.section-head {
+  font-size:11px; font-weight:700; letter-spacing:3px;
+  text-transform:uppercase; color:var(--muted);
+  margin-bottom:24px;
+  display:flex; align-items:center; gap:14px;
+}
+.section-head::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ── CARDS GRID ── */
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:18px; margin-bottom:48px; }
+
+/* ── ANALYSIS CARD ── */
+.a-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius:16px;
+  padding:0;
+  overflow:hidden;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+  text-decoration:none; color:inherit;
+  display:flex; flex-direction:column;
+  cursor:pointer;
+}
+.a-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  border-color: rgba(255,255,255,.14);
+}
+.a-card-top {
+  height:8px;
+}
+.a-card-body { padding:22px 22px 0; flex:1; }
+.a-card-icon {
+  font-size:28px; margin-bottom:14px;
+  display:block;
+}
+.a-card-title {
+  font-size:16px; font-weight:600;
+  line-height:1.3; margin-bottom:8px;
+}
+.a-card-desc {
+  font-size:12.5px; color:var(--muted);
+  line-height:1.65; margin-bottom:16px;
+}
+.a-card-tags {
+  display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px;
+}
+.tag {
+  font-size:10px; font-weight:600; letter-spacing:.5px;
+  padding:3px 8px; border-radius:20px; text-transform:uppercase;
+}
+.a-card-footer {
+  padding:14px 22px;
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:12px;
+}
+.a-card-footer-left { color:var(--muted); }
+.open-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:600;
+  padding:7px 14px; border-radius:8px;
+  border:none; cursor:pointer;
+  transition:opacity .2s;
+}
+.open-btn:hover { opacity:.85; }
+
+/* ── QUICK STATS ── */
+.quick-stats {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px; margin-bottom:48px;
+}
+.qs {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:18px 16px;
+  position:relative; overflow:hidden;
+}
+.qs::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+.qs.g::after { background:var(--green); }
+.qs.r::after { background:var(--red); }
+.qs.b::after { background:var(--blue); }
+.qs.y::after { background:var(--gold); }
+.qs.p::after { background:var(--purple); }
+.qs-l { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:8px; }
+.qs-v { font-family:'Playfair Display',serif; font-size:30px; font-weight:700; line-height:1; }
+.qs-s { font-size:11px; color:var(--muted); margin-top:5px; }
+
+/* ── WORD CARD ── */
+.word-card {
+  background: linear-gradient(135deg, #1a2840 0%, #1e3050 100%);
+  border: 1px solid rgba(58,133,200,.25);
+  border-radius:16px; overflow:hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.word-card:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,.3); }
+.word-card-body { padding:22px; }
+.word-card-icon { font-size:32px; margin-bottom:14px; display:block; }
+.word-card-title { font-size:16px; font-weight:600; margin-bottom:8px; }
+.word-card-desc { font-size:12.5px; color:var(--muted); line-height:1.65; margin-bottom:16px; }
+.word-card-footer {
+  padding:14px 22px; border-top:1px solid rgba(58,133,200,.15);
+  display:flex; align-items:center; justify-content:space-between;
+}
+
+/* ── TIMELINE ── */
+.timeline { position:relative; padding-left:28px; margin-bottom:48px; }
+.timeline::before {
+  content:''; position:absolute; left:0; top:8px; bottom:8px;
+  width:1px; background:var(--border);
+}
+.tl-item { position:relative; margin-bottom:20px; }
+.tl-item::before {
+  content:''; position:absolute; left:-32px; top:6px;
+  width:8px; height:8px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--ink);
+}
+.tl-date { font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px; }
+.tl-text { font-size:13px; line-height:1.6; }
+
+/* ── INFO BOX ── */
+.info-box {
+  border-radius:12px; padding:16px 20px;
+  margin-bottom:32px; font-size:13px; line-height:1.65;
+}
+.info-box.gold { background:rgba(240,180,41,.07); border:1px solid rgba(240,180,41,.2); color:#f5d982; }
+.info-box.info { background:rgba(58,133,200,.07); border:1px solid rgba(58,133,200,.2); color:#93c5f5; }
+.info-box strong { font-weight:700; }
+
+/* ── FOOTER ── */
+.footer {
+  border-top:1px solid var(--border);
+  padding:32px 40px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px;
+  font-size:12px; color:var(--muted);
+}
+.footer-logo { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--text); }
+.footer-logo span { color:var(--gold); }
+
+@media(max-width:600px) {
+  .hero { padding:44px 24px 36px; }
+  .sticky-nav { padding:0 24px; }
+  .wrap { padding:28px 24px 60px; }
+  .footer { padding:24px; }
+  .hero-stats { gap:20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-badge">Centrum Analiz · XV LO Poznań · 2026</div>
+  <h1>XV Liceum Ogólnokształcące<br>im. prof. Wiktora Degi<br><em>Centrum Analiz Danych</em></h1>
+  <p class="hero-desc">
+    Kompletne repozytorium analiz maturalnych i rankingowych szkoły — 11 lat danych,
+    porównanie z 10 liceami Poznania, plan naprawczy i wizualizacje interaktywne.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat-item">
+      <div class="hero-stat-val" style="color:var(--gold)">11</div>
+      <div class="hero-stat-lbl">lat danych (2015–2025)</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="hero-stat-val" style="color:var(--blue)">11</div>
+      <div class="hero-stat-lbl">porównanych liceów</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="hero-stat-val" style="color:var(--green)">7</div>
+      <div class="hero-stat-lbl">raportów i dashboardów</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="hero-stat-val" style="color:var(--red)">26.</div>
+      <div class="hero-stat-lbl">miejsce w rankingu 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav">
+  <a href="#kluczowe" class="nav-pill active">📌 Kluczowe wskaźniki</a>
+  <a href="#analizy" class="nav-pill">📊 Analizy szkoły</a>
+  <a href="#porownanie" class="nav-pill">🏫 Porównanie liceów</a>
+  <a href="#plan" class="nav-pill">📋 Plan naprawczy</a>
+  <a href="#kontekst" class="nav-pill">💡 Kontekst</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- KLUCZOWE WSKAŹNIKI -->
+  <section id="kluczowe">
+    <div class="section-head">Kluczowe wskaźniki 2025</div>
+    <div class="quick-stats">
+      <div class="qs y">
+        <div class="qs-l">Nabór 2025</div>
+        <div class="qs-v" style="color:var(--gold)">213</div>
+        <div class="qs-s">kandydatów / 112 miejsc · wskaźnik 1,90</div>
+      </div>
+      <div class="qs r">
+        <div class="qs-l">Ranking Poznań 2026</div>
+        <div class="qs-v" style="color:var(--red)">26.</div>
+        <div class="qs-s">było 15. w 2025 · spadek -11 miejsc</div>
+      </div>
+      <div class="qs g">
+        <div class="qs-l">Angielski P vs kraj</div>
+        <div class="qs-v" style="color:var(--green)">1,05</div>
+        <div class="qs-s">82,3% vs 78% kraj · 11/11 lat powyżej</div>
+      </div>
+      <div class="qs g">
+        <div class="qs-l">Matematyka P vs kraj</div>
+        <div class="qs-v" style="color:var(--green)">1,17</div>
+        <div class="qs-s">71,4% vs 61% kraj · rekord 11 lat</div>
+      </div>
+      <div class="qs r">
+        <div class="qs-l">Matematyka R vs kraj</div>
+        <div class="qs-v" style="color:var(--red)">0,50</div>
+        <div class="qs-s">16,4% vs 33% kraj · kryzys chroniczny</div>
+      </div>
+      <div class="qs b">
+        <div class="qs-l">Wskaźnik zbiorczy 2025</div>
+        <div class="qs-v" style="color:var(--blue)">0,990</div>
+        <div class="qs-s">tuż pod średnią krajową (1,0)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANALIZY SZKOŁY -->
+  <section id="analizy">
+    <div class="section-head">Analizy szkoły — XV LO</div>
+    <div class="cards">
+
+      <!-- KARTA 1 -->
+      <div class="a-card" onclick="openFile('xvlo_wynik_ogolny.html')">
+        <div class="a-card-top" style="background:linear-gradient(90deg,#f0b429,#e87a30)"></div>
+        <div class="a-card-body">
+          <span class="a-card-icon">📈</span>
+          <div class="a-card-title">Wynik ogólny szkoły 2015–2025</div>
+          <div class="a-card-desc">
+            Jeden wykres zbiorczy — wskaźnik szkoły na tle średniej krajowej przez 11 lat.
+            Plus pozycja w Rankingu Liceów Poznania 2021–2026. Idealny do prezentacji.
+          </div>
+          <div class="a-card-tags">
+            <span class="tag" style="background:rgba(240,180,41,.15);color:#f5d982">2015–2025</span>
+            <span class="tag" style="background:rgba(58,133,200,.15);color:#93c5f5">Wskaźnik zbiorczy</span>
+            <span class="tag" style="background:rgba(224,82,82,.15);color:#f7a8a8">Ranking</span>
+          </div>
+        </div>
+        <div class="a-card-footer">
+          <span class="a-card-footer-left">📁 xvlo_wynik_ogolny.html</span>
+          <button class="open-btn" style="background:var(--gold);color:#1a1a2e">Otwórz →</button>
+        </div>
+      </div>
+
+      <!-- KARTA 2 -->
+      <div class="a-card" onclick="openFile('xvlo_wskaznik_zbiorczy.html')">
+        <div class="a-card-top" style="background:linear-gradient(90deg,#3a85c8,#0fb8a0)"></div>
+        <div class="a-card-body">
+          <span class="a-card-icon">🧮</span>
+          <div class="a-card-title">Wskaźnik zbiorczy — wszystkie przedmioty</div>
+          <div class="a-card-desc">
+            Szczegółowy dashboard wskaźnika zbiorczego z podziałem na grupy:
+            przedmioty P, języki R, nauki ścisłe R, nauki społeczne R.
+            Pełna tabela z chipami kolorowymi dla każdego roku.
+          </div>
+          <div class="a-card-tags">
+            <span class="tag" style="background:rgba(58,133,200,.15);color:#93c5f5">11 lat</span>
+            <span class="tag" style="background:rgba(39,174,115,.15);color:#7de0b5">Mini-wykresy</span>
+            <span class="tag" style="background:rgba(240,180,41,.15);color:#f5d982">Tabela roczna</span>
+          </div>
+        </div>
+        <div class="a-card-footer">
+          <span class="a-card-footer-left">📁 xvlo_wskaznik_zbiorczy.html</span>
+          <button class="open-btn" style="background:var(--blue);color:#fff">Otwórz →</button>
+        </div>
+      </div>
+
+      <!-- KARTA 3 -->
+      <div class="a-card" onclick="openFile('xvlo_pelna_analiza.html')">
+        <div class="a-card-top" style="background:linear-gradient(90deg,#27ae73,#3a85c8)"></div>
+        <div class="a-card-body">
+          <span class="a-card-icon">📊</span>
+          <div class="a-card-title">Pełna analiza 11-letnia (2015–2025)</div>
+          <div class="a-card-desc">
+            Kompletny raport z 6 zakładkami: dashboard z radarem, rekrutacja 2019–2025,
+            matury podstawowe i rozszerzone, heatmapa wskaźników 11×8,
+            syntetyczne wnioski z klasyfikacją przedmiotów.
+          </div>
+          <div class="a-card-tags">
+            <span class="tag" style="background:rgba(39,174,115,.15);color:#7de0b5">6 zakładek</span>
+            <span class="tag" style="background:rgba(58,133,200,.15);color:#93c5f5">Heatmapa</span>
+            <span class="tag" style="background:rgba(240,180,41,.15);color:#f5d982">Rekrutacja</span>
+            <span class="tag" style="background:rgba(224,82,82,.15);color:#f7a8a8">Matury R</span>
+          </div>
+        </div>
+        <div class="a-card-footer">
+          <span class="a-card-footer-left">📁 xvlo_pelna_analiza.html</span>
+          <button class="open-btn" style="background:var(--green);color:#fff">Otwórz →</button>
+        </div>
+      </div>
+
+      <!-- KARTA 4 -->
+      <div class="a-card" onclick="openFile('xvlo_analiza.html')">
+        <div class="a-card-top" style="background:linear-gradient(90deg,#8b7fe8,#3a85c8)"></div>
+        <div class="a-card-body">
+          <span class="a-card-icon">🔬</span>
+          <div class="a-card-title">Szczegółowa analiza rankingowa 2021–2025</div>
+          <div class="a-card-desc">
+            Dashboard skupiony na ostatnich 5 latach: KPI z kluczowymi liczbami,
+            trajektoria rankingowa, wyniki matur z przełącznikiem lat (2021–2025),
+            trendy angielski/matematyka/polski P, tabela wszystkich przedmiotów rozszerzonych.
+          </div>
+          <div class="a-card-tags">
+            <span class="tag" style="background:rgba(139,127,232,.15);color:#c4b5fd">5 zakładek</span>
+            <span class="tag" style="background:rgba(58,133,200,.15);color:#93c5f5">2021–2025</span>
+            <span class="tag" style="background:rgba(240,180,41,.15);color:#f5d982">KPI</span>
+          </div>
+        </div>
+        <div class="a-card-footer">
+          <span class="a-card-footer-left">📁 xvlo_analiza.html</span>
+          <button class="open-btn" style="background:var(--purple);color:#fff">Otwórz →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PORÓWNANIE LICEÓW -->
+  <section id="porownanie">
+    <div class="section-head">Porównanie liceów Poznania</div>
+    <div class="cards">
+
+      <!-- KARTA 5 -->
+      <div class="a-card" onclick="openFile('poznan_licea_porownanie2.html')">
+        <div class="a-card-top" style="background:linear-gradient(90deg,#0fb8a0,#27ae73)"></div>
+        <div class="a-card-body">
+          <span class="a-card-icon">🏫</span>
+          <div class="a-card-title">XV LO vs 10 liceów Poznania — wyniki maturalne</div>
+          <div class="a-card-desc">
+            Porównanie XV LO z XI, XII, XIV, XVI, XVII, XX, XXV, X, IV, V LO
+            na podstawie wyników maturalnych 2021–2025. 4 zakładki:
+            trend, ranking 2025, zmiana r/r, wyniki absolutne przedmiotów.
+          </div>
+          <div class="a-card-tags">
+            <span class="tag" style="background:rgba(15,184,160,.15);color:#5eead4">11 szkół</span>
+            <span class="tag" style="background:rgba(39,174,115,.15);color:#7de0b5">Trend 5 lat</span>
+            <span class="tag" style="background:rgba(58,133,200,.15);color:#93c5f5">4 zakładki</span>
+          </div>
+        </div>
+        <div class="a-card-footer">
+          <span class="a-card-footer-left">📁 poznan_licea_porownanie2.html</span>
+          <button class="open-btn" style="background:var(--teal);color:#fff">Otwórz →</button>
+        </div>
+      </div>
+
+      <!-- KARTA 6 -->
+      <div class="a-card" onclick="openFile('poznan_licea_porownanie.html')">
+        <div class="a-card-top" style="background:linear-gradient(90deg,#e05252,#e87a30)"></div>
+        <div class="a-card-body">
+          <span class="a-card-icon">📉</span>
+          <div class="a-card-title">Ranking Poznań 2025 vs 2026 — kto zyskał, kto stracił</div>
+          <div class="a-card-desc">
+            Analiza zmian pozycji wszystkich 32 liceów stacjonarnych w rankingu
+            WaszaEdukacja.pl między edycją 2025 a 2026. Scatter plot, tabela zmian,
+            top awanse i spadki, XV LO na tle grupy porównawczej.
+          </div>
+          <div class="a-card-tags">
+            <span class="tag" style="background:rgba(224,82,82,.15);color:#f7a8a8">32 licea</span>
+            <span class="tag" style="background:rgba(232,122,48,.15);color:#f5b890">Scatter plot</span>
+            <span class="tag" style="background:rgba(58,133,200,.15);color:#93c5f5">6 zakładek</span>
+          </div>
+        </div>
+        <div class="a-card-footer">
+          <span class="a-card-footer-left">📁 poznan_licea_porownanie.html</span>
+          <button class="open-btn" style="background:var(--red);color:#fff">Otwórz →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PLAN NAPRAWCZY -->
+  <section id="plan">
+    <div class="section-head">Plan naprawczy</div>
+
+    <div class="info-box gold">
+      <strong>📄 Format Word (.docx)</strong> — plik do pobrania, gotowy do wydruku lub wysłania mailem.
+      Otwórz w Microsoft Word lub Google Docs.
+    </div>
+
+    <div class="word-card">
+      <div class="word-card-body">
+        <span class="word-card-icon">📋</span>
+        <div class="word-card-title" style="font-size:18px;font-weight:600;margin-bottom:10px">Plan Naprawczy XV LO 2025/2026–2026/2027</div>
+        <div class="word-card-desc">
+          Pełny dokument strategiczny (ok. 15 stron A4) z: diagnozą sytuacji i tabelą KPI,
+          analizą SWOT, celami głównymi i szczegółowymi, 4 obszarami działań
+          (matematyka i chemia R, humanistyczne, rekrutacja, komunikacja),
+          harmonogramem z odpowiedzialnymi i wskaźnikami sukcesu,
+          komunikacją z dyrekcją, radą pedagogiczną, rodzicami i uczniami.
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+          <span class="tag" style="background:rgba(58,133,200,.15);color:#93c5f5">4 obszary działań</span>
+          <span class="tag" style="background:rgba(39,174,115,.15);color:#7de0b5">Harmonogram 2026–2027</span>
+          <span class="tag" style="background:rgba(240,180,41,.15);color:#f5d982">SWOT</span>
+          <span class="tag" style="background:rgba(139,127,232,.15);color:#c4b5fd">Wskaźniki sukcesu</span>
+        </div>
+      </div>
+      <div class="word-card-footer">
+        <span style="font-size:12px;color:var(--muted)">📁 plan_naprawczy_XV_LO.docx · Microsoft Word</span>
+        <button class="open-btn" style="background:var(--blue);color:#fff" onclick="openFile('plan_naprawczy_XV_LO.docx')">Pobierz .docx →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTEKST -->
+  <section id="kontekst">
+    <div class="section-head">Kontekst i kluczowe odkrycia</div>
+
+    <div class="info-box info">
+      <strong>ℹ️ Jak korzystać z tego centrum analiz?</strong><br>
+      Każda karta otwiera osobny plik. Pliki HTML działają w przeglądarce — nie wymagają internetu
+      po pobraniu. Plik .docx otwiera się w programie Word lub Google Docs.
+      Aby udostępnić, wrzuć pliki na Netlify Drop (netlify.com/drop) — darmowy hosting w 10 sekund.
+    </div>
+
+    <div class="section-head" style="margin-top:8px">Oś czasu kluczowych odkryć</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">2016 — najgorszy rok zbiorczy</div>
+        <div class="tl-text">Wskaźnik zbiorczy 0,862 — historyczne minimum. Matematyka R: 0,44. Chemia R: 0,50.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2019 — kryzys matematyki R</div>
+        <div class="tl-text">Wskaźnik matematyki R: 0,23 — absolutny dołek historyczny. Szkoła osiągnęła tylko 9% przy średniej krajowej 38,6%.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2021 — silny nabór (wskaźnik 1,43)</div>
+        <div class="tl-text">Pierwszy wyraźnie dobry nabór po przejściu z systemu gimnazjalnego. Bezpośrednio przełoży się na rekordową maturę 2024.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2023 — rekord naboru (433 kandydatów)</div>
+        <div class="tl-text">Podwójny rocznik (efekt reformy oświaty). Wskaźnik naboru 1,93. Matura z tego rocznika: 2026.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2024 — rekordowa matura (wskaźnik zbiorczy 1,143)</div>
+        <div class="tl-text">Najlepszy rok zbiorczy w historii. Matematyka R: 1,30. Angielski R: 1,45. Historia R: 1,29. Efekt silnego naboru 2021.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2025 — korekta i spadek rankingowy</div>
+        <div class="tl-text">Matematyka R: 0,50. Chemia R: 0,77. Wskaźnik zbiorczy: 0,990. Ranking 2026: 26. miejsce (z 15.). Największy spadek wśród publicznych LO Poznania.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2025 — nabór odbija (213 kandydatów, wskaźnik 1,90)</div>
+        <div class="tl-text">Drugi najwyższy nabór w historii szkoły (po rekordzie 2023). Sygnał optymistyczny — jeśli korelacja nabór→matura się utrzyma, matura 2028 może być przełomowa.</div>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">XV LO<span> · </span>Centrum Analiz</div>
+  <div>im. prof. Wiktora Degi w Poznaniu · dane 2015–2025 · źródło: OKE Poznań, WaszaEdukacja.pl</div>
+  <div>Wersja 1.0 · maj 2026</div>
+</footer>
+
+<script>
+// Nawigacja sticky - podkreślenie aktywnej sekcji
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-pill');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#'+e.target.id);
+      });
+    }
+  });
+}, { rootMargin:'-30% 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// Otwieranie pliku
+function openFile(name) {
+  // Próbuje otworzyć plik z tego samego katalogu
+  window.open(name, '_blank');
+}
+
+// Smooth scroll dla linków nawigacji
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const id = link.getAttribute('href').slice(1);
+    document.getElementById(id)?.scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+});
+</script>
+</body>
+</html>
