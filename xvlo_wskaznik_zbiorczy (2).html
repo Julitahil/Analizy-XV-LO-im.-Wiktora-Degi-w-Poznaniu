@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XV LO — Wskaźnik Zbiorczy 2015–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f4ef;
+  --ink: #1a1a2e;
+  --muted: #7a7a8c;
+  --gold: #c9891a;
+  --gold-light: #f5d98a;
+  --red: #c0392b;
+  --green: #1a6b3c;
+  --blue: #1e5fa0;
+  --line: #e2ddd6;
+  --card: #ffffff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; }
+
+.page { max-width:1000px; margin:0 auto; padding:48px 32px 64px; }
+
+/* HEADER */
+.header { margin-bottom:48px; }
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+h1 { font-family:'DM Serif Display',serif; font-size:clamp(28px,5vw,46px); line-height:1.1; color:var(--ink); margin-bottom:8px; }
+h1 em { font-style:italic; color:var(--gold); }
+.subtitle { font-size:14px; color:var(--muted); line-height:1.6; max-width:580px; }
+
+/* LEGEND ROW */
+.legend-row { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:32px; align-items:center; }
+.legend-item { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted); }
+.legend-line { width:28px; height:3px; border-radius:2px; }
+.legend-dot { width:10px; height:10px; border-radius:50%; }
+
+/* MAIN CHART */
+.chart-box {
+  background: var(--card);
+  border-radius:16px;
+  padding:32px 28px 24px;
+  margin-bottom:28px;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+}
+.chart-label {
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px;
+  color:var(--muted); margin-bottom:20px;
+}
+svg { overflow:visible; }
+
+/* MINI CHARTS GRID */
+.mini-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  gap:16px;
+  margin-bottom:28px;
+}
+.mini-box {
+  background:var(--card);
+  border-radius:12px;
+  padding:18px 16px;
+  box-shadow: 0 1px 12px rgba(0,0,0,0.05);
+}
+.mini-title {
+  font-size:11px; font-weight:600; color:var(--muted);
+  text-transform:uppercase; letter-spacing:1px;
+  margin-bottom:12px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.mini-badge {
+  font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px;
+}
+.mini-badge.up   { background:#d4f0e0; color:#1a6b3c; }
+.mini-badge.down { background:#fde8e8; color:#c0392b; }
+.mini-badge.mid  { background:#fef3d4; color:#9a6800; }
+
+/* INSIGHT BOXES */
+.insights { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px; }
+.insight {
+  border-radius:12px; padding:18px 20px; font-size:13px; line-height:1.6;
+}
+.insight.good { background:#edf7f2; border-left:3px solid var(--green); }
+.insight.warn { background:#fdf0ef; border-left:3px solid var(--red); }
+.insight.info { background:#eef4fc; border-left:3px solid var(--blue); }
+.insight.gold { background:#fef8ec; border-left:3px solid var(--gold); }
+.insight strong { font-weight:600; display:block; margin-bottom:4px; }
+@media(max-width:600px){ .insights { grid-template-columns:1fr; } }
+
+/* YEAR TABLE */
+.year-table-wrap { background:var(--card); border-radius:12px; padding:24px; box-shadow:0 1px 12px rgba(0,0,0,0.05); }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+th { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:8px 10px; border-bottom:2px solid var(--line); text-align:center; }
+th:first-child { text-align:left; }
+td { padding:7px 10px; border-bottom:1px solid var(--line); text-align:center; vertical-align:middle; }
+td:first-child { text-align:left; font-weight:600; }
+tr:last-child td { border:none; }
+tr.best td { background:#edf7f2; }
+tr.best td:first-child { border-left:3px solid var(--green); }
+tr.worst td { background:#fdf0ef; }
+tr.worst td:first-child { border-left:3px solid var(--red); }
+
+.val-chip {
+  display:inline-block; padding:2px 8px; border-radius:20px;
+  font-size:11px; font-weight:600;
+}
+.val-chip.hi  { background:#d4f0e0; color:#1a6b3c; }
+.val-chip.lo  { background:#fde8e8; color:#c0392b; }
+.val-chip.mid { background:#fef3d4; color:#9a6800; }
+.val-chip.ok  { background:#e8f0fb; color:#1e5fa0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="eyebrow">XV LO im. prof. Wiktora Degi · Poznań</div>
+    <h1>Wynik zbiorczy vs średnia krajowa<br><em>2015–2025 · wszystkie przedmioty</em></h1>
+    <p class="subtitle">Średnia wskaźników ze wszystkich dostępnych przedmiotów maturalnych (szkoła / kraj). Wartość 1,0 = dokładnie na poziomie średniej krajowej.</p>
+  </div>
+
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-line" style="background:#1a1a2e"></div> Wskaźnik zbiorczy</div>
+    <div class="legend-item"><div class="legend-line" style="background:#c9891a;border-top:2px dashed #c9891a;background:transparent;border-bottom:none;border-left:none;border-right:none;width:28px"></div> Poziom 1,0 (kraj)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a6b3c"></div> Powyżej krajowej</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div> Poniżej krajowej</div>
+    <div class="legend-item"><div class="legend-line" style="background:#c9891a;opacity:.4"></div> Trend (śr. ruchoma)</div>
+  </div>
+
+  <!-- MAIN CHART -->
+  <div class="chart-box">
+    <div class="chart-label">Wskaźnik zbiorczy (średnia z 8–11 przedmiotów) · 2015–2025</div>
+    <svg id="mainChart" viewBox="0 0 900 320" style="width:100%"></svg>
+  </div>
+
+  <!-- MINI CHARTS -->
+  <div class="mini-grid">
+    <div class="mini-box"><div class="mini-title">Przedmioty podstawowe <span class="mini-badge up">↑ trend</span></div><svg id="miniP" viewBox="0 0 260 100" style="width:100%"></svg></div>
+    <div class="mini-box"><div class="mini-title">Języki rozszerzone <span class="mini-badge up">↑ trend</span></div><svg id="miniJ" viewBox="0 0 260 100" style="width:100%"></svg></div>
+    <div class="mini-box"><div class="mini-title">Nauki ścisłe R <span class="mini-badge down">↓ problem</span></div><svg id="miniS" viewBox="0 0 260 100" style="width:100%"></svg></div>
+    <div class="mini-box"><div class="mini-title">Nauki społeczne R <span class="mini-badge mid">→ poprawa</span></div><svg id="miniH" viewBox="0 0 260 100" style="width:100%"></svg></div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="insights">
+    <div class="insight good">
+      <strong>✅ Języki i geografia — trwała przewaga</strong>
+      Angielski P powyżej kraju przez wszystkie 11 lat. Geografia R — średnia wskaźnika 1,30 przez cały okres. To nie rocznikowy fluk, to tożsamość szkoły.
+    </div>
+    <div class="insight warn">
+      <strong>⚠️ Nauki ścisłe R — chroniczny deficyt</strong>
+      Matematyka R: poniżej kraju przez 9 z 11 lat. Chemia R: duże wahania (0,48–1,24). Biologia R: poniżej kraju przez 8 lat. Najsłabszy obszar zbiorczy.
+    </div>
+    <div class="insight gold">
+      <strong>💡 Rok 2024 — rekordowy wyjątek</strong>
+      Wskaźnik zbiorczy 2024 był najwyższy w historii. To rocznik naboru 2021 (wskaźnik 1,43) — najsilniejszy nabór po podstawówce przed rokiem 2023. Korelacja jest wyraźna.
+    </div>
+    <div class="insight info">
+      <strong>ℹ️ Matematyka P — wyłom w negatywnym trendzie</strong>
+      Jedyny przedmiot ścisły, który konsekwentnie się poprawia: wskaźnik rósł od 0,889 (2020) do 1,17 (2025 — rekord). Dowód, że zmiana jest możliwa.
+    </div>
+  </div>
+
+  <!-- YEAR TABLE -->
+  <div class="year-table-wrap">
+    <div class="chart-label" style="margin-bottom:16px">Pełna tabela wskaźników rocznych — wszystkie przedmioty</div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>Rok</th>
+          <th>Pol P</th><th>Ang P</th><th>Mat P</th>
+          <th>Ang R</th><th>Pol R</th>
+          <th>Mat R</th><th>Che R</th><th>Geo R</th><th>His R</th><th>WOS R</th><th>Bio R</th>
+          <th style="border-left:2px solid #e2ddd6">ZBIORCZY</th>
+        </tr>
+      </thead>
+      <tbody id="fullTable"></tbody>
+    </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const yrs = ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+
+// Wskaźniki (szkoła/kraj) — bezpośrednio z dokumentu szkoły
+const IDX = {
+  polP:  [0.91, 1.034,1.207,1.048,1.139,1.063,1.124,1.141,1.08, 1.083,1.07],
+  angP:  [1.024,1.006,1.144,1.035,1.080,1.047,1.107,1.192,1.065,1.164,1.05],
+  matP:  [0.912,1.005,1.013,0.962,0.942,0.889,0.992,1.149,0.960,1.137,1.17],
+  angR:  [0.971,0.870,1.043,1.044,0.974,0.960,1.123,1.169,1.097,1.445,1.16],
+  polR:  [1.229,0.991,0.729,1.076,0.935,0.972,1.281,1.177,1.210,1.338,1.13],
+  matR:  [0.736,0.439,1.138,0.559,0.233,0.415,null, 0.676,0.669,1.303,0.50],
+  chemR: [0.61, 0.50, 0.48, 1.11, 0.65, 0.60, 0.65, 0.98, 1.24, 1.19, 0.77],
+  geoR:  [0.95, 1.34, 1.62, 1.17, 1.22, 1.25, 1.32, 1.45, 1.35, 1.33, 1.43],
+  histR: [0.79, 0.88, 0.67, 0.49, 0.83, 0.93, 1.05, 1.228,1.055,1.29, 1.04],
+  wosR:  [0.68, 0.78, 0.87, 0.62, 1.39, 1.04, 0.91, 1.60, 1.064,1.24, 1.22],
+  bioR:  [0.65, 0.84, 0.75, 1.02, 0.74, 0.86, 0.86, 1.04, 0.87, 1.06, 1.02],
+};
+
+const KEYS = Object.keys(IDX);
+
+// Oblicz wskaźnik zbiorczy (średnia z dostępnych przedmiotów w danym roku)
+const composite = yrs.map((_,i) => {
+  const vals = KEYS.map(k=>IDX[k][i]).filter(v=>v!==null);
+  return +(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(3);
+});
+
+// Grupy
+const groups = {
+  P:  ['polP','angP','matP'],
+  jR: ['angR','polR'],
+  sR: ['matR','chemR','geoR','bioR'],
+  hR: ['histR','wosR'],
+};
+
+function groupAvg(keys, i) {
+  const vals = keys.map(k=>IDX[k][i]).filter(v=>v!==null);
+  if(!vals.length) return null;
+  return +(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(3);
+}
+
+// ===== MAIN CHART =====
+function drawMain() {
+  const svg = document.getElementById('mainChart');
+  const W=900, H=320;
+  const pad={l:54,r:20,t:24,b:40};
+  const w=W-pad.l-pad.r, h=H-pad.t-pad.b;
+  const mn=0.7, mx=1.25;
+  const xs=i=>pad.l+i*(w/(yrs.length-1));
+  const ys=v=>pad.t+h-((v-mn)/(mx-mn))*h;
+  const refY=ys(1.0);
+
+  let html='';
+
+  // Background bands
+  html+=`<rect x="${pad.l}" y="${pad.t}" width="${w}" height="${refY-pad.t}" fill="rgba(26,107,60,0.04)" rx="0"/>`;
+  html+=`<rect x="${pad.l}" y="${refY}" width="${w}" height="${pad.t+h-refY}" fill="rgba(192,57,43,0.04)" rx="0"/>`;
+
+  // Grid lines
+  [0.75,0.85,0.95,1.0,1.05,1.15].forEach(v=>{
+    const y=ys(v);
+    const isRef=v===1.0;
+    html+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+w}" y2="${y}" stroke="${isRef?'#c9891a':'#e2ddd6'}" stroke-width="${isRef?1.5:1}" stroke-dasharray="${isRef?'5,4':''}"/>`;
+    html+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#9a9aaa" font-size="10">${v.toFixed(2)}</text>`;
+  });
+
+  // Year labels
+  yrs.forEach((yr,i)=>{
+    html+=`<text x="${xs(i)}" y="${H-8}" text-anchor="middle" fill="#9a9aaa" font-size="11">${yr}</text>`;
+    html+=`<line x1="${xs(i)}" y1="${pad.t}" x2="${xs(i)}" y2="${pad.t+h}" stroke="#e2ddd6" stroke-width="0.5"/>`;
+  });
+
+  // "Kraj" label
+  html+=`<text x="${pad.l+w+4}" y="${refY+4}" fill="#c9891a" font-size="10" font-weight="600">kraj</text>`;
+
+  // Trend line (moving average 3)
+  const trend = composite.map((_,i)=>{
+    const slice=[composite[Math.max(0,i-1)],composite[i],composite[Math.min(yrs.length-1,i+1)]].filter(Boolean);
+    return +(slice.reduce((a,b)=>a+b,0)/slice.length).toFixed(3);
+  });
+  let tPath=`M${xs(0)},${ys(trend[0])}`;
+  for(let i=1;i<trend.length;i++){
+    const cpx=(xs(i-1)+xs(i))/2;
+    tPath+=` C${cpx},${ys(trend[i-1])} ${cpx},${ys(trend[i])} ${xs(i)},${ys(trend[i])}`;
+  }
+  html+=`<path d="${tPath}" fill="none" stroke="#c9891a" stroke-width="1.5" stroke-opacity="0.4" stroke-dasharray="6,3"/>`;
+
+  // Area fill (split at 1.0)
+  // Above 1.0 — green fill
+  let areaAbove = `M${xs(0)},${refY}`;
+  composite.forEach((v,i)=>{
+    const y=Math.min(ys(v),refY);
+    areaAbove+=` L${xs(i)},${y}`;
+  });
+  areaAbove+=` L${xs(yrs.length-1)},${refY} Z`;
+  html+=`<path d="${areaAbove}" fill="rgba(26,107,60,0.12)"/>`;
+
+  // Below 1.0 — red fill
+  let areaBelow = `M${xs(0)},${refY}`;
+  composite.forEach((v,i)=>{
+    const y=Math.max(ys(v),refY);
+    areaBelow+=` L${xs(i)},${y}`;
+  });
+  areaBelow+=` L${xs(yrs.length-1)},${refY} Z`;
+  html+=`<path d="${areaBelow}" fill="rgba(192,57,43,0.10)"/>`;
+
+  // Main line
+  let path=`M${xs(0)},${ys(composite[0])}`;
+  for(let i=1;i<composite.length;i++){
+    const cpx=(xs(i-1)+xs(i))/2;
+    path+=` C${cpx},${ys(composite[i-1])} ${cpx},${ys(composite[i])} ${xs(i)},${ys(composite[i])}`;
+  }
+  html+=`<path d="${path}" fill="none" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>`;
+
+  // Dots + labels
+  composite.forEach((v,i)=>{
+    const x=xs(i), y=ys(v);
+    const col=v>=1.0?'#1a6b3c':'#c0392b';
+    const isMax=v===Math.max(...composite);
+    const isMin=v===Math.min(...composite.filter(Boolean));
+    html+=`<circle cx="${x}" cy="${y}" r="${isMax||isMin?7:5}" fill="${col}" stroke="white" stroke-width="2"/>`;
+    if(isMax||isMin||i===composite.length-1){
+      const dy=y<pad.t+30?16:-12;
+      html+=`<text x="${x}" y="${y+dy}" text-anchor="middle" fill="${col}" font-size="11" font-weight="700">${v.toFixed(3)}</text>`;
+    } else {
+      html+=`<text x="${x}" y="${y-9}" text-anchor="middle" fill="${col}" font-size="10" font-weight="600">${v.toFixed(2)}</text>`;
+    }
+  });
+
+  // Annotations
+  const bestI=composite.indexOf(Math.max(...composite));
+  const worstI=composite.indexOf(Math.min(...composite.filter(Boolean)));
+  html+=`<text x="${xs(bestI)}" y="${pad.t+12}" text-anchor="middle" fill="#1a6b3c" font-size="10" font-style="italic">rekord</text>`;
+  html+=`<text x="${xs(worstI)+2}" y="${pad.t+h-8}" text-anchor="middle" fill="#c0392b" font-size="10" font-style="italic">najgorszy</text>`;
+
+  svg.innerHTML=html;
+}
+
+// ===== MINI CHARTS =====
+function drawMini(svgId, keys, col) {
+  const svg=document.getElementById(svgId);
+  if(!svg) return;
+  const W=260, H=100;
+  const pad={l:8,r:8,t:14,b:16};
+  const w=W-pad.l-pad.r, h=H-pad.t-pad.b;
+  const vals=yrs.map((_,i)=>groupAvg(keys,i));
+  const clean=vals.filter(v=>v!==null);
+  const mn=Math.min(...clean)-0.05;
+  const mx=Math.max(...clean)+0.05;
+  const xs=i=>pad.l+i*(w/(yrs.length-1));
+  const ys=v=>pad.t+h-((v-mn)/(mx-mn))*h;
+  const refY=ys(1.0);
+
+  let html='';
+  // ref line
+  if(refY>=pad.t&&refY<=pad.t+h){
+    html+=`<line x1="${pad.l}" y1="${refY}" x2="${pad.l+w}" y2="${refY}" stroke="#c9891a" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>`;
+  }
+  // area
+  let area=`M${xs(0)},${pad.t+h}`;
+  vals.forEach((v,i)=>{ if(v!==null) area+=` L${xs(i)},${ys(v)}`; });
+  area+=` L${xs(yrs.length-1)},${pad.t+h} Z`;
+  html+=`<path d="${area}" fill="${col}" fill-opacity="0.12"/>`;
+  // line
+  const pts=vals.map((v,i)=>v!==null?[xs(i),ys(v)]:null);
+  const vp=pts.filter(Boolean);
+  if(vp.length>1){
+    let line=`M${vp[0][0]},${vp[0][1]}`;
+    for(let i=1;i<vp.length;i++){
+      const cpx=(vp[i-1][0]+vp[i][0])/2;
+      line+=` C${cpx},${vp[i-1][1]} ${cpx},${vp[i][1]} ${vp[i][0]},${vp[i][1]}`;
+    }
+    html+=`<path d="${line}" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`;
+  }
+  // dots
+  vals.forEach((v,i)=>{
+    if(v===null) return;
+    html+=`<circle cx="${xs(i)}" cy="${ys(v)}" r="3" fill="${v>=1.0?'#1a6b3c':'#c0392b'}" stroke="white" stroke-width="1.2"/>`;
+  });
+  // year labels (every 2)
+  yrs.forEach((yr,i)=>{
+    if(i%2===0) html+=`<text x="${xs(i)}" y="${H-2}" text-anchor="middle" fill="#bbb" font-size="8">${yr.slice(2)}</text>`;
+  });
+  // last value
+  const lastV=vals[vals.length-1];
+  if(lastV!==null){
+    const col2=lastV>=1.0?'#1a6b3c':'#c0392b';
+    html+=`<text x="${xs(yrs.length-1)-2}" y="${ys(lastV)-6}" text-anchor="end" fill="${col2}" font-size="10" font-weight="700">${lastV.toFixed(2)}</text>`;
+  }
+
+  svg.innerHTML=html;
+}
+
+// ===== FULL TABLE =====
+function buildTable(){
+  const maxComp=Math.max(...composite);
+  const minComp=Math.min(...composite.filter(v=>v>0));
+
+  function chip(v){
+    if(v===null) return '<span style="color:#ccc">—</span>';
+    const cls=v>=1.1?'hi':v>=1.0?'ok':v>=0.85?'mid':'lo';
+    return `<span class="val-chip ${cls}">${v.toFixed(2)}</span>`;
+  }
+
+  let html='';
+  yrs.forEach((yr,i)=>{
+    const comp=composite[i];
+    const isBest=comp===maxComp;
+    const isWorst=comp===minComp;
+    html+=`<tr class="${isBest?'best':isWorst?'worst':''}">
+      <td>${yr}${isBest?' 🏆':isWorst?' ⚠️':''}</td>
+      <td>${chip(IDX.polP[i])}</td>
+      <td>${chip(IDX.angP[i])}</td>
+      <td>${chip(IDX.matP[i])}</td>
+      <td>${chip(IDX.angR[i])}</td>
+      <td>${chip(IDX.polR[i])}</td>
+      <td>${chip(IDX.matR[i])}</td>
+      <td>${chip(IDX.chemR[i])}</td>
+      <td>${chip(IDX.geoR[i])}</td>
+      <td>${chip(IDX.histR[i])}</td>
+      <td>${chip(IDX.wosR[i])}</td>
+      <td>${chip(IDX.bioR[i])}</td>
+      <td style="border-left:2px solid #e2ddd6"><strong style="color:${comp>=1.0?'#1a6b3c':'#c0392b'}">${comp.toFixed(3)}</strong></td>
+    </tr>`;
+  });
+
+  // Footer row — average
+  html+=`<tr style="background:#f7f4ef">
+    <td style="font-size:10px;color:#7a7a8c;font-weight:600">ŚREDNIA</td>
+    ${Object.keys(IDX).map(k=>{
+      const vals=IDX[k].filter(v=>v!==null);
+      const avg=+(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
+      return `<td>${chip(avg)}</td>`;
+    }).join('')}
+    <td style="border-left:2px solid #e2ddd6"><strong style="color:#1a1a2e">${(composite.reduce((a,b)=>a+b,0)/composite.length).toFixed(3)}</strong></td>
+  </tr>`;
+
+  document.getElementById('fullTable').innerHTML=html;
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded',()=>{
+  drawMain();
+  drawMini('miniP', groups.P,  '#1e5fa0');
+  drawMini('miniJ', groups.jR, '#1a6b3c');
+  drawMini('miniS', groups.sR, '#c0392b');
+  drawMini('miniH', groups.hR, '#c9891a');
+  buildTable();
+});
+</script>
+</body>
+</html>

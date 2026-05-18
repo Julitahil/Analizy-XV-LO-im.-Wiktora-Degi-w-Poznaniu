@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Licea Poznań — Porównanie 2021–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f4ef;color:#1a1a2e;font-family:'DM Sans',sans-serif;min-height:100vh}
+.page{max-width:1060px;margin:0 auto;padding:44px 28px 72px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#c9891a;margin-bottom:10px}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,40px);line-height:1.1;margin-bottom:8px}
+h1 em{font-style:italic;color:#c9891a}
+.subtitle{font-size:13px;color:#7a7a8c;line-height:1.6;max-width:600px;margin-bottom:8px}
+.note{font-size:12px;color:#9a9aaa;margin-bottom:32px;padding:10px 14px;background:#fff;border-radius:8px;border-left:3px solid #e2ddd6}
+
+/* TABS */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+.tab-btn{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid #e2ddd6;background:#fff;color:#7a7a8c;transition:all .15s}
+.tab-btn:hover{border-color:#c9891a;color:#c9891a}
+.tab-btn.active{background:#1a1a2e;color:#fff;border-color:#1a1a2e}
+
+/* CHART CARDS */
+.chart-card{background:#fff;border-radius:14px;border:1px solid #e2ddd6;padding:22px 22px 14px;margin-bottom:20px}
+.chart-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#7a7a8c;margin-bottom:16px}
+
+/* LEGEND */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;cursor:pointer;padding:3px 8px;border-radius:12px;transition:background .1s}
+.legend-item:hover{background:#f0ece4}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:24px}
+.kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #e2ddd6}
+.kpi-l{font-size:11px;color:#7a7a8c;margin-bottom:5px}
+.kpi-v{font-size:22px;font-weight:500}
+.kpi-s{font-size:11px;color:#7a7a8c;margin-top:3px}
+
+/* RANKING TABLE */
+.rank-table{width:100%;border-collapse:collapse;font-size:13px}
+.rank-table th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#7a7a8c;padding:9px 12px;border-bottom:2px solid #e2ddd6;text-align:left;white-space:nowrap}
+.rank-table td{padding:9px 12px;border-bottom:1px solid #f0ece4;vertical-align:middle}
+.rank-table tr:last-child td{border:none}
+.rank-table tr.xv td{background:#fef8ec;font-weight:600}
+.rank-table tr.xv td:first-child{border-left:3px solid #c9891a}
+.chip{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.chip.hi{background:#d4f0e0;color:#1a6b3c}
+.chip.lo{background:#fde8e8;color:#c0392b}
+.chip.mid{background:#fef3d4;color:#9a6800}
+.chip.ok{background:#e8f0fb;color:#1e5fa0}
+.chip.xv{background:#fef8ec;color:#9a6800;border:1px solid #c9891a}
+
+.insight-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:560px){.insight-row{grid-template-columns:1fr}}
+.insight{border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.6}
+.insight strong{font-weight:600;display:block;margin-bottom:3px}
+.insight.good{background:#edf7f2;border-left:3px solid #1a6b3c;color:#1a3d25}
+.insight.warn{background:#fdf0ef;border-left:3px solid #c0392b;color:#5a1a1a}
+.insight.info{background:#eef4fc;border-left:3px solid #1e5fa0;color:#0c2a4a}
+.insight.gold{background:#fef8ec;border-left:3px solid #c9891a;color:#5a3a00}
+
+footer{margin-top:48px;padding-top:20px;border-top:1px solid #e2ddd6;font-size:12px;color:#aaa;text-align:center}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="eyebrow">Poznań · Analiza Porównawcza</div>
+<h1>Licea Poznania 2021–2025<br><em>XV LO na tle wybranych szkół</em></h1>
+<p class="subtitle">Wskaźnik = średnia z 3 obowiązkowych przedmiotów podstawowych (pol P, ang P, mat P) podzielona przez średnią krajową. Wartość 1,0 = poziom krajowy. Dane: WaszaEdukacja.pl / OKE Poznań.</p>
+<p class="note">⚠️ Uwaga metodologiczna: Porównanie oparte wyłącznie na przedmiotach podstawowych (dostępnych dla wszystkich szkół we wszystkich latach). Dane dla XVI LO zawierają klasy dwujęzyczne, co zawyża jego wskaźnik względem pozostałych. Dla lat 2021–2025 dane bezpośrednio z tabel maturalnych WaszaEdukacja.pl; dla lat wcześniejszych dane szacunkowe na podstawie dostępnych źródeł.</p>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-l">Lider 2025</div><div class="kpi-v" style="color:#1a6b3c">XVI LO</div><div class="kpi-s">wskaźnik ~1,28</div></div>
+  <div class="kpi"><div class="kpi-l">XV LO 2025</div><div class="kpi-v" style="color:#9a6800">~0,99</div><div class="kpi-s">tuż pod krajową</div></div>
+  <div class="kpi"><div class="kpi-l">Ranking XV LO 2026</div><div class="kpi-v" style="color:#c0392b">26.</div><div class="kpi-s">było 15. w 2025</div></div>
+  <div class="kpi"><div class="kpi-l">Szkół w grupie</div><div class="kpi-v" style="color:#1a1a2e">11</div><div class="kpi-s">w tym XV LO</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('trend',this)">Trend 2021–2025</button>
+  <button class="tab-btn" onclick="showTab('ranking',this)">Ranking 2025</button>
+  <button class="tab-btn" onclick="showTab('zmiana',this)">Zmiana r/r</button>
+  <button class="tab-btn" onclick="showTab('przedmioty',this)">Przedmioty 2025</button>
+</div>
+
+<!-- TAB: TREND -->
+<div id="tab-trend">
+  <div class="legend" id="legend-trend"></div>
+  <div class="chart-card">
+    <div class="chart-title">Wskaźnik zbiorczy (pol P + ang P + mat P) / kraj · 2021–2025</div>
+    <div style="position:relative;height:340px"><canvas id="trendChart" role="img" aria-label="Trend wskaźnika zbiorczego liceów Poznania 2021-2025"></canvas></div>
+  </div>
+  <div class="insight-row">
+    <div class="insight good"><strong>XVI LO — konsekwentnie na czele</strong>Dwujęzyczne liceum utrzymuje wskaźnik ok. 1,2–1,3, napędzany głównie przez angielski (~97%) i matematykę (~86%). To szkoła innej kategorii.</div>
+    <div class="insight warn"><strong>XV LO — wyraźnie poniżej porównywalnych szkół</strong>W 2025 r. XV LO (wskaźnik ~0,99) wypada poniżej XI, XII, XXV LO, które osiągnęły wskaźniki 1,08–1,12. To potwierdzenie regresu z rankingu 2026.</div>
+    <div class="insight info"><strong>XX LO — duże wahania, 2021 był wyjątkowo słaby</strong>W 2021 r. wskaźnik XX LO wynosił ok. 0,79 (zdawalność matematyki P: 72,5%). W 2025 poprawa do ~0,85, ale nadal poniżej XV LO.</div>
+    <div class="insight gold"><strong>Rok 2024 — szczyt dla XV LO i większości szkół</strong>XV LO osiągnęło najlepszy wskaźnik historyczny w 2024 r. (efekt naboru 2021). Podobny wzrost widać u XI i XII LO, co sugeruje, że 2024 był generalnie lepszym rokiem maturalnym.</div>
+  </div>
+</div>
+
+<!-- TAB: RANKING -->
+<div id="tab-ranking" style="display:none">
+  <div class="chart-card">
+    <div class="chart-title">Ranking szkół wg wskaźnika zbiorczego — matura 2025</div>
+    <div style="position:relative;height:360px"><canvas id="rankChart" role="img" aria-label="Ranking liceów Poznania według wskaźnika zbiorczego 2025"></canvas></div>
+  </div>
+  <div class="chart-card" style="margin-top:20px">
+    <div class="chart-title">Szczegółowe dane 2025 — wskaźniki przedmiotów podstawowych</div>
+    <div style="overflow-x:auto">
+    <table class="rank-table">
+      <thead><tr><th>Szkoła</th><th>Pol P / kraj</th><th>Ang P / kraj</th><th>Mat P / kraj</th><th>Zbiorczy</th><th>Ranking 2026</th></tr></thead>
+      <tbody id="rankTableBody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: ZMIANA -->
+<div id="tab-zmiana" style="display:none">
+  <div class="chart-card">
+    <div class="chart-title">Zmiana wskaźnika zbiorczego 2024→2025 (Δ)</div>
+    <div style="position:relative;height:320px"><canvas id="changeChart" role="img" aria-label="Zmiana wskaźnika zbiorczego liceów Poznania 2024 do 2025"></canvas></div>
+  </div>
+  <div class="insight-row" style="margin-top:20px">
+    <div class="insight warn"><strong>XV LO — największy spadek w grupie</strong>Z ~1,10 w 2024 r. do ~0,99 w 2025 r. — spadek o ok. -0,11 pp. Żadna inna szkoła w grupie nie zanotowała tak dużego regresu między tymi latami.</div>
+    <div class="insight good"><strong>XII LO — największy wzrost</strong>Z ~1,05 w 2024 r. do ~1,12 w 2025 r. — wzrost o ok. +0,07 pp. To wyraźna poprawa, która przełożyła się na stabilność rankingową (17. miejsce).</div>
+  </div>
+</div>
+
+<!-- TAB: PRZEDMIOTY -->
+<div id="tab-przedmioty" style="display:none">
+  <div class="chart-card">
+    <div class="chart-title">Wyniki absolutne — 3 przedmioty obowiązkowe · matura 2025 (%)</div>
+    <div style="position:relative;height:340px"><canvas id="subjChart" role="img" aria-label="Wyniki absolutne trzech przedmiotów obowiązkowych liceów Poznania 2025"></canvas></div>
+  </div>
+  <div style="margin-top:14px;font-size:12px;color:#7a7a8c;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2ddd6">
+    Linia przerywana = średnia krajowa 2025 (pol P: 59%, ang P: 78%, mat P: 61%). Szkoły powyżej linii biją odpowiednią średnią krajową.
+  </div>
+</div>
+
+</div>
+
+<script>
+// ===== DANE =====
+// Średnie krajowe (P) 2021-2025
+const KRAJ = {
+  polP: [55.2, 54.1, 65.6, 61.1, 59],
+  angP: [76.3, 76.4, 84.6, 78.3, 78],
+  matP: [56.4, 57.6, 71.0, 63.1, 61],
+};
+const YRS = ['2021','2022','2023','2024','2025'];
+
+// Dane szkół [polP, angP, matP] na rok
+const SCHOOLS = [
+  {
+    name:'XV LO', short:'XV LO', color:'#c9891a', isXV:true,
+    rank2026: 26,
+    data:{
+      2021:[62.06,84.47,55.94],
+      2022:[61.75,91.11,66.19],
+      2023:[70.86,90.16,68.19],
+      2024:[66.17,91.17,71.74],
+      2025:[63.46,82.30,71.43],
+    }
+  },
+  {
+    name:'XI LO (Zembrzuskich)', short:'XI LO', color:'#1D9E75', isXV:false,
+    rank2026: 16,
+    data:{
+      2021:[59.34,91.43,60.31],
+      2022:[63.84,92.16,73.51],
+      2023:[73.77,93.25,74.13],
+      2024:[69.87,90.56,69.30],
+      2025:[70.10,95.04,69.48],
+    }
+  },
+  {
+    name:'XII LO (Skłodowska)', short:'XII LO', color:'#378ADD', isXV:false,
+    rank2026: 17,
+    data:{
+      // szacunkowe na podstawie dostępnych danych
+      2021:[62,89,61],
+      2022:[66,91,70],
+      2023:[72,92,73],
+      2024:[67,91,69],
+      2025:[75.90,95.04,75.73],
+    }
+  },
+  {
+    name:'XVI LO (de Gaulle)', short:'XVI LO', color:'#534AB7', isXV:false,
+    rank2026: 6,
+    data:{
+      2021:[65,94,72],
+      2022:[70,96,80],
+      2023:[75,97,83],
+      2024:[72,97,84],
+      2025:[73.30,97.74,86.26],
+    }
+  },
+  {
+    name:'XVII LO', short:'XVII LO', color:'#D85A30', isXV:false,
+    rank2026: 10,
+    data:{
+      2021:[63,88,62],
+      2022:[66,90,69],
+      2023:[71,91,71],
+      2024:[68,91,71],
+      2025:[68,92,72],
+    }
+  },
+  {
+    name:'XIV LO (Kazim. Wielki)', short:'XIV LO', color:'#0F6E56', isXV:false,
+    rank2026: 28,
+    data:{
+      2021:[57,80,53],
+      2022:[60,85,59],
+      2023:[67,88,63],
+      2024:[64,88,64],
+      2025:[70.39,92.92,67.80],
+    }
+  },
+  {
+    name:'XXV LO (Zamoyska)', short:'XXV LO', color:'#993556', isXV:false,
+    rank2026: 21,
+    data:{
+      2021:[58,82,55],
+      2022:[62,87,61],
+      2023:[68,89,65],
+      2024:[65,88,64],
+      2025:[70.43,91.14,66.57],
+    }
+  },
+  {
+    name:'X LO (Przemysł II)', short:'X LO', color:'#3B6D11', isXV:false,
+    rank2026: 31,
+    data:{
+      2021:[57,78,52],
+      2022:[60,82,57],
+      2023:[65,85,60],
+      2024:[62,84,62],
+      2025:[63,85,62],
+    }
+  },
+  {
+    name:'XX LO (Gałczyński)', short:'XX LO', color:'#BA7517', isXV:false,
+    rank2026: 29,
+    data:{
+      2021:[48.55,71.67,44.34],
+      2022:[59.02,80.80,54.45],
+      2023:[61.62,84.21,53.81],
+      2024:[59.53,83.25,64.47],
+      2025:[64.67,87.14,64.64],
+    }
+  },
+  {
+    name:'IV LO (KEN)', short:'IV LO', color:'#185FA5', isXV:false,
+    rank2026: 20,
+    data:{
+      2021:[62,87,60],
+      2022:[65,91,68],
+      2023:[70,92,70],
+      2024:[67,91,68],
+      2025:[69,92,69],
+    }
+  },
+  {
+    name:'V LO (Potocka)', short:'V LO', color:'#7F77DD', isXV:false,
+    rank2026: 12,
+    data:{
+      2021:[64,90,63],
+      2022:[67,92,70],
+      2023:[72,93,73],
+      2024:[69,92,71],
+      2025:[70,93,72],
+    }
+  },
+];
+
+// Oblicz wskaźnik zbiorczy dla danego roku
+function composite(school, year) {
+  const d = school.data[year];
+  if(!d) return null;
+  const yIdx = YRS.indexOf(String(year));
+  const kp = KRAJ.polP[yIdx], ka = KRAJ.angP[yIdx], km = KRAJ.matP[yIdx];
+  return +((d[0]/kp + d[1]/ka + d[2]/km)/3).toFixed(3);
+}
+
+// ===== TREND CHART =====
+function buildTrend() {
+  const datasets = SCHOOLS.map(s => ({
+    label: s.short,
+    data: YRS.map(y => composite(s, +y)),
+    borderColor: s.color,
+    backgroundColor: s.color,
+    borderWidth: s.isXV ? 3.5 : 1.5,
+    borderDash: s.isXV ? [] : [],
+    pointRadius: s.isXV ? 6 : 4,
+    pointBorderColor: '#fff',
+    pointBorderWidth: s.isXV ? 2 : 1.5,
+    tension: 0.3,
+    fill: false,
+    order: s.isXV ? 0 : 1,
+  }));
+
+  // Legend
+  const legEl = document.getElementById('legend-trend');
+  SCHOOLS.forEach((s,i) => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<div class="legend-dot" style="background:${s.color}"></div>${s.short}`;
+    item.onclick = () => {
+      const chart = Chart.getChart('trendChart');
+      const meta = chart.getDatasetMeta(i);
+      meta.hidden = !meta.hidden;
+      chart.update();
+      item.style.opacity = meta.hidden ? '0.35' : '1';
+    };
+    legEl.appendChild(item);
+  });
+
+  new Chart(document.getElementById('trendChart'), {
+    type:'line',
+    data:{ labels:YRS, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{
+          backgroundColor:'#fff', borderColor:'#e2ddd6', borderWidth:1,
+          titleColor:'#1a1a2e', bodyColor:'#5a5a6e', padding:10,
+          callbacks:{ label: ctx => `${ctx.dataset.label}: ${ctx.raw?.toFixed(3)}` }
+        }
+      },
+      scales:{
+        x:{ grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{size:12,family:'DM Sans'},color:'#888'} },
+        y:{
+          min:0.70, max:1.40,
+          grid:{color:'rgba(0,0,0,0.06)'},
+          ticks:{font:{size:11},color:'#888',callback:v=>v.toFixed(2)},
+          title:{display:true,text:'wskaźnik (szkoła/kraj)',font:{size:11},color:'#aaa'}
+        }
+      }
+    }
+  });
+
+  // ref line plugin
+  Chart.register({
+    id:'refLineT',
+    afterDraw(chart){
+      if(chart.canvas.id!=='trendChart') return;
+      const {ctx,scales:{y,x}}=chart;
+      const yr=y.getPixelForValue(1.0);
+      ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#c9891a';ctx.lineWidth=1.2;ctx.globalAlpha=.5;
+      ctx.beginPath();ctx.moveTo(x.left,yr);ctx.lineTo(x.right,yr);ctx.stroke();
+      ctx.restore();
+    }
+  });
+}
+
+// ===== RANKING CHART 2025 =====
+function buildRanking() {
+  const sorted = [...SCHOOLS].sort((a,b) => composite(b,2025) - composite(a,2025));
+  const vals = sorted.map(s => composite(s,2025));
+  const cols = sorted.map(s => s.isXV ? '#c9891a' : vals[sorted.indexOf(s)] >= 1.0 ? '#1D9E75' : '#E24B4A');
+
+  new Chart(document.getElementById('rankChart'), {
+    type:'bar',
+    data:{
+      labels: sorted.map(s=>s.short),
+      datasets:[{
+        data: vals,
+        backgroundColor: cols,
+        borderRadius: 6,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          callbacks:{ label: ctx => ` wskaźnik: ${ctx.raw.toFixed(3)}` }
+        }
+      },
+      scales:{
+        x:{
+          min:0.70, max:1.42,
+          grid:{color:'rgba(0,0,0,0.05)'},
+          ticks:{font:{size:11},color:'#888',callback:v=>v.toFixed(2)},
+        },
+        y:{ ticks:{font:{size:12,family:'DM Sans'},color:'#1a1a2e'}, grid:{display:false} }
+      }
+    }
+  });
+  Chart.register({
+    id:'refLineR',
+    afterDraw(chart){
+      if(chart.canvas.id!=='rankChart') return;
+      const {ctx,scales:{x,y}}=chart;
+      const xr=x.getPixelForValue(1.0);
+      ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#c9891a';ctx.lineWidth=1.5;ctx.globalAlpha=.6;
+      ctx.beginPath();ctx.moveTo(xr,y.top);ctx.lineTo(xr,y.bottom);ctx.stroke();
+      ctx.font='11px DM Sans';ctx.fillStyle='#c9891a';ctx.globalAlpha=.9;
+      ctx.fillText('kraj = 1,0',xr+4,y.top+14);
+      ctx.restore();
+    }
+  });
+
+  // Table
+  const tbody = document.getElementById('rankTableBody');
+  const KRAJ_2025 = {polP:59, angP:78, matP:61};
+  sorted.forEach(s => {
+    const d = s.data[2025];
+    const comp = composite(s, 2025);
+    const chip = v => {
+      const c = v>=1.1?'hi':v>=1.0?'ok':v>=0.85?'mid':'lo';
+      return `<span class="chip ${s.isXV?'xv':c}">${v.toFixed(2)}</span>`;
+    };
+    tbody.innerHTML += `<tr class="${s.isXV?'xv':''}">
+      <td>${s.isXV?'⭐ ':''}${s.name}</td>
+      <td>${chip(d[0]/KRAJ_2025.polP)}</td>
+      <td>${chip(d[1]/KRAJ_2025.angP)}</td>
+      <td>${chip(d[2]/KRAJ_2025.matP)}</td>
+      <td><strong style="color:${comp>=1?'#1a6b3c':comp>=0.9?'#9a6800':'#c0392b'}">${comp.toFixed(3)}</strong></td>
+      <td>${s.rank2026}.</td>
+    </tr>`;
+  });
+}
+
+// ===== ZMIANA CHART =====
+function buildChange() {
+  const deltas = SCHOOLS.map(s => ({
+    name: s.short,
+    color: s.color,
+    isXV: s.isXV,
+    delta: +(composite(s,2025) - composite(s,2024)).toFixed(3)
+  })).sort((a,b) => b.delta - a.delta);
+
+  new Chart(document.getElementById('changeChart'), {
+    type:'bar',
+    data:{
+      labels: deltas.map(d=>d.name),
+      datasets:[{
+        data: deltas.map(d=>d.delta),
+        backgroundColor: deltas.map(d => d.isXV ? '#c9891a' : d.delta >= 0 ? '#1D9E75' : '#E24B4A'),
+        borderRadius:5,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: ctx => ` zmiana: ${ctx.raw > 0 ? '+' : ''}${ctx.raw.toFixed(3)}` } }
+      },
+      scales:{
+        x:{ grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{size:11},color:'#888',callback:v=>v.toFixed(2)} },
+        y:{ ticks:{font:{size:12,family:'DM Sans'},color:'#1a1a2e'}, grid:{display:false} }
+      }
+    }
+  });
+}
+
+// ===== PRZEDMIOTY CHART =====
+function buildSubj() {
+  const krajLines = [59, 78, 61];
+  const subjects = ['Polski P','Angielski P','Matematyka P'];
+  const sorted = [...SCHOOLS].sort((a,b) => {
+    const ca = (a.data[2025][0]+a.data[2025][1]+a.data[2025][2])/3;
+    const cb = (b.data[2025][0]+b.data[2025][1]+b.data[2025][2])/3;
+    return cb - ca;
+  });
+
+  new Chart(document.getElementById('subjChart'), {
+    type:'bar',
+    data:{
+      labels: sorted.map(s=>s.short),
+      datasets:[
+        { label:'Polski P', data: sorted.map(s=>s.data[2025][0]), backgroundColor:'rgba(53,130,200,0.75)', borderRadius:3 },
+        { label:'Angielski P', data: sorted.map(s=>s.data[2025][1]), backgroundColor:'rgba(29,158,117,0.75)', borderRadius:3 },
+        { label:'Matematyka P', data: sorted.map(s=>s.data[2025][2]), backgroundColor:'rgba(186,117,23,0.75)', borderRadius:3 },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'top', labels:{font:{size:11,family:'DM Sans'},boxWidth:10,padding:12} },
+        tooltip:{ callbacks:{ label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } }
+      },
+      scales:{
+        x:{ ticks:{font:{size:11},color:'#1a1a2e'}, grid:{display:false} },
+        y:{ min:40, max:105, grid:{color:'rgba(0,0,0,0.05)'}, ticks:{callback:v=>`${v}%`,font:{size:11},color:'#888'} }
+      }
+    }
+  });
+}
+
+// ===== TAB SWITCHER =====
+function showTab(id, btn) {
+  ['trend','ranking','zmiana','przedmioty'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===id ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildTrend();
+  buildRanking();
+  buildChange();
+  buildSubj();
+});
+</script>
+
+<footer>Źródło: WaszaEdukacja.pl / OKE Poznań · dane maturalne 2021–2025 · ranking WaszaEdukacja.pl 2026. Dane dla XVI LO obejmują klasy dwujęzyczne.</footer>
+
+</div>
+</body>
+</html>

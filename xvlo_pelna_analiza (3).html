@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XV LO Poznań — Pełna Analiza 2014–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e1520;
+  --ink2: #1a2840;
+  --card: #141e2e;
+  --card2: #1c2a3e;
+  --border: rgba(255,255,255,0.07);
+  --text: #dce8f5;
+  --muted: #6e859e;
+  --gold: #f0b429;
+  --red: #e05252;
+  --green: #27ae73;
+  --blue: #3a85c8;
+  --purple: #8b7fe8;
+  --teal: #0fb8a0;
+  --orange: #e87a30;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--ink); color:var(--text); font-family:'Outfit',sans-serif; }
+
+/* HERO */
+.hero {
+  padding: 56px 36px 44px;
+  background: linear-gradient(160deg, #0e1520 0%, #0d1f3a 50%, #0e1520 100%);
+  border-bottom: 1px solid var(--border);
+  position:relative; overflow:hidden;
+}
+.hero-grid {
+  position:absolute; inset:0; opacity:.04;
+  background-image: linear-gradient(var(--blue) 1px, transparent 1px), linear-gradient(90deg, var(--blue) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.hero-badge { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+.hero-badge::before { content:''; width:28px; height:1px; background:var(--gold); }
+.hero h1 { font-family:'Playfair Display',serif; font-size:clamp(26px,5vw,50px); font-weight:900; line-height:1.1; margin-bottom:12px; }
+.hero h1 em { font-style:italic; color:var(--gold); }
+.hero p { color:var(--muted); font-size:13.5px; max-width:640px; line-height:1.65; }
+
+/* TABS */
+.nav { background:var(--ink2); border-bottom:1px solid var(--border); display:flex; overflow-x:auto; scrollbar-width:none; }
+.nav::-webkit-scrollbar { display:none; }
+.nav-item { padding:14px 22px; font-size:12.5px; font-weight:600; letter-spacing:.3px; color:var(--muted); cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; transition:all .2s; }
+.nav-item:hover { color:var(--text); }
+.nav-item.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+.wrap { padding:28px 36px; max-width:1200px; margin:0 auto; }
+.sec { display:none; }
+.sec.on { display:block; }
+
+/* SECTION TITLE */
+.st { font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted); margin-bottom:24px; display:flex; align-items:center; gap:12px; }
+.st::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* CARDS */
+.card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:24px; margin-bottom:24px; }
+.card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:20px; }
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+@media(max-width:680px){ .g2,.g3 { grid-template-columns:1fr; } }
+
+/* KPI */
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:28px; }
+.kpi { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px 16px; position:relative; overflow:hidden; }
+.kpi::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+.kpi.g::after { background:var(--green); }
+.kpi.r::after { background:var(--red); }
+.kpi.b::after { background:var(--blue); }
+.kpi.y::after { background:var(--gold); }
+.kpi.p::after { background:var(--purple); }
+.kpi.t::after { background:var(--teal); }
+.kpi-l { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:8px; }
+.kpi-v { font-family:'Playfair Display',serif; font-size:34px; font-weight:700; line-height:1; }
+.kpi-s { font-size:11px; color:var(--muted); margin-top:5px; }
+.kpi-d { font-size:11.5px; font-weight:600; margin-top:4px; }
+
+/* PILL */
+.pill { display:inline-flex; align-items:center; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:600; }
+.pill.r { background:rgba(224,82,82,.15); color:#f7a8a8; }
+.pill.g { background:rgba(39,174,115,.15); color:#7de0b5; }
+.pill.y { background:rgba(240,180,41,.15); color:#f5d982; }
+.pill.b { background:rgba(58,133,200,.15); color:#93c5f5; }
+
+/* HBOX */
+.hbox { border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:13px; line-height:1.65; }
+.hbox.warn { background:rgba(224,82,82,.07); border:1px solid rgba(224,82,82,.2); color:#f5b0b0; }
+.hbox.info { background:rgba(58,133,200,.07); border:1px solid rgba(58,133,200,.2); color:#93c5f5; }
+.hbox.good { background:rgba(39,174,115,.07); border:1px solid rgba(39,174,115,.2); color:#7de0b5; }
+.hbox.gold { background:rgba(240,180,41,.07); border:1px solid rgba(240,180,41,.2); color:#f5d982; }
+.hbox strong { font-weight:700; }
+
+/* TABLE */
+table.dt { width:100%; border-collapse:collapse; font-size:12.5px; }
+table.dt th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:9px 11px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
+table.dt td { padding:8px 11px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+table.dt tr:last-child td { border:none; }
+table.dt tr:hover td { background:rgba(255,255,255,0.02); }
+table.dt .hl td { background:rgba(240,180,41,0.06); font-weight:600; }
+table.dt .hl td:first-child { border-left:3px solid var(--gold); }
+
+/* BAR H */
+.barh { margin:6px 0; display:flex; align-items:center; gap:10px; }
+.barh-lbl { font-size:12px; width:150px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.barh-track { flex:1; background:rgba(255,255,255,0.05); border-radius:3px; height:16px; overflow:hidden; }
+.barh-fill { height:100%; border-radius:3px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; transition:width .8s ease; }
+.barh-fill span { font-size:10px; font-weight:700; color:rgba(255,255,255,.9); font-family:'Outfit',monospace; }
+
+/* RECRUITMENT TIMELINE */
+.rec-row { display:flex; align-items:center; gap:12px; margin:10px 0; }
+.rec-year { font-size:12px; font-weight:600; color:var(--muted); width:40px; flex-shrink:0; }
+.rec-bar { height:28px; border-radius:4px; display:flex; align-items:center; padding:0 10px; font-size:12px; font-weight:600; white-space:nowrap; min-width:60px; }
+.rec-ratio { font-size:11px; color:var(--muted); margin-left:8px; }
+
+svg text { font-family:'Outfit',sans-serif; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-badge">Dane źródłowe szkoły · 2014–2025</div>
+  <h1>XV LO im. prof. Wiktora Degi<br><em>Pełna analiza 11 lat</em></h1>
+  <p>Analiza danych rekrutacyjnych i maturalnych 2014–2025 na podstawie dokumentu wewnętrznego szkoły. Wskaźniki względem średniej krajowej (>1,0 = powyżej średniej).</p>
+</div>
+
+<div class="nav">
+  <div class="nav-item active" onclick="go('dashboard',this)">📊 Dashboard</div>
+  <div class="nav-item" onclick="go('rekrutacja',this)">🎓 Rekrutacja</div>
+  <div class="nav-item" onclick="go('podstawowe',this)">📝 Matury P</div>
+  <div class="nav-item" onclick="go('rozszerzone',this)">🔬 Matury R</div>
+  <div class="nav-item" onclick="go('wskazniki',this)">📈 Wskaźniki vs kraj</div>
+  <div class="nav-item" onclick="go('wnioski',this)">💡 Wnioski</div>
+</div>
+
+<div class="wrap">
+
+<!-- ======= DASHBOARD ======= -->
+<div class="sec on" id="dashboard">
+
+  <div class="kpis">
+    <div class="kpi y">
+      <div class="kpi-l">Nabór 2025</div>
+      <div class="kpi-v" style="color:var(--gold)">213</div>
+      <div class="kpi-s">kandydatów / 112 miejsc</div>
+      <div class="kpi-d" style="color:var(--green)">wskaźnik 1,90</div>
+    </div>
+    <div class="kpi r">
+      <div class="kpi-l">Rekord naboru</div>
+      <div class="kpi-v" style="color:var(--red)">433</div>
+      <div class="kpi-s">kandydatów w 2023 r.</div>
+      <div class="kpi-d" style="color:var(--muted)">wskaźnik 1,93</div>
+    </div>
+    <div class="kpi g">
+      <div class="kpi-l">Ang. P vs kraj 2025</div>
+      <div class="kpi-v" style="color:var(--green)">1,05</div>
+      <div class="kpi-s">82,3% vs 78% kraj</div>
+      <div class="kpi-d" style="color:var(--green)">↑ stale powyżej kraj.</div>
+    </div>
+    <div class="kpi g">
+      <div class="kpi-l">Mat. P vs kraj 2025</div>
+      <div class="kpi-v" style="color:var(--green)">1,17</div>
+      <div class="kpi-s">71,43% vs 61% kraj</div>
+      <div class="kpi-d" style="color:var(--green)">↑ najlepszy wynik 11 lat</div>
+    </div>
+    <div class="kpi r">
+      <div class="kpi-l">Mat. R vs kraj 2025</div>
+      <div class="kpi-v" style="color:var(--red)">0,50</div>
+      <div class="kpi-s">16,44% vs 33% kraj</div>
+      <div class="kpi-d" style="color:var(--red)">↓ poniżej połowy średniej</div>
+    </div>
+    <div class="kpi g">
+      <div class="kpi-l">Geografia R vs kraj</div>
+      <div class="kpi-v" style="color:var(--green)">1,43</div>
+      <div class="kpi-s">57,12% vs 40% kraj</div>
+      <div class="kpi-d" style="color:var(--green)">↑ konsekwentnie lider</div>
+    </div>
+  </div>
+
+  <div class="hbox warn">
+    <strong>⚠️ Kluczowe napięcie danych:</strong> Szkoła ma wyraźnie dwa oblicza. Przedmioty językowe i geografia konsekwentnie biją średnią krajową od lat. Matematyka rozszerzona i chemia rozszerzona są chronicznym problemem — matematyka R była poniżej kraju przez 9 z 11 analizowanych lat, a w 2025 r. osiągnęła zaledwie 50% średniej krajowej.
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Wskaźniki vs kraj — synteza 2015–2025</div>
+      <svg viewBox="0 0 380 300" style="width:100%" id="radar"></svg>
+    </div>
+    <div class="card">
+      <div class="card-title">Profil wyników — mocne i słabe strony (średnia 2020–2025)</div>
+      <div id="profileBars"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Trendy wskaźnikowe — najważniejsze przedmioty 2015–2025</div>
+    <svg viewBox="0 0 700 260" style="width:100%" id="mainTrend"></svg>
+  </div>
+</div>
+
+<!-- ======= REKRUTACJA ======= -->
+<div class="sec" id="rekrutacja">
+  <div class="st">Nabór kandydatów 2019–2025</div>
+
+  <div class="hbox gold">
+    <strong>Kontekst:</strong> W 2019 r. nastąpiło przejście z systemu gimnazjalnego na szkołę podstawową, co spowodowało podwójny rocznik w 2023 r. (433 kandydatów). Dane sprzed 2019 r. dotyczą naboru po gimnazjum i są nieporównywalne.
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Liczba kandydatów vs miejsca (112)</div>
+      <div id="recBars"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Wskaźnik obłożenia (kandydaci / miejsca)</div>
+      <svg viewBox="0 0 340 240" style="width:100%" id="recRatio"></svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Profile klas 2024–2025 (nowy system)</div>
+    <table class="dt">
+      <thead><tr><th>Profil</th><th>Przedmioty rozszerzone</th><th>Nabór 2024</th><th>Nabór 2025</th><th>Zmiana</th></tr></thead>
+      <tbody>
+        <tr><td>Humanistyczny</td><td>j. polski, historia</td><td>30</td><td>37</td><td><span class="pill g">↑ +7</span></td></tr>
+        <tr><td>Biologiczno-chemiczny</td><td>biologia, chemia</td><td>16</td><td>49</td><td><span class="pill g">↑ +33</span></td></tr>
+        <tr><td>Matematyczno-geograficzny</td><td>mat, geografia</td><td>26</td><td>57</td><td><span class="pill g">↑ +31</span></td></tr>
+        <tr><td>Biologiczno-językowy</td><td>biologia, j. obcy</td><td>46</td><td>70</td><td><span class="pill g">↑ +24</span></td></tr>
+        <tr class="hl"><td><strong>RAZEM</strong></td><td>—</td><td><strong>118</strong></td><td><strong>213</strong></td><td><span class="pill g">↑ +95 (+81%)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="hbox good">
+    <strong>✅ Bardzo dobry sygnał rekrutacyjny:</strong> Nabór 2025 wyniósł 213 kandydatów przy 112 miejscach — wskaźnik 1,90. To niemal podwojenie wyniku 2024 r. (118 kandydatów, wskaźnik 1,05). Wszystkie cztery profile zanotowały wzrost, szczególnie mat-geo (+31) i biol-językowy (+24). Świadczy to o wzroście zainteresowania szkołą mimo słabego rankingu 2026.
+  </div>
+
+  <div class="hbox warn">
+    <strong>⚠️ Ważna obserwacja — 2024 był anomalią:</strong> Wskaźnik 1,05 w 2024 r. (118 kandydatów) to najsłabszy wynik naboru po podstawówce w historii szkoły — poniżej wskaźnika rekrutacji z pierwszego roku po gimnazjum (2019: 1,007). Rok 2025 odbił się, ale warto monitorować czy to trwały trend czy efekt jednorazowy.
+  </div>
+</div>
+
+<!-- ======= PODSTAWOWE ======= -->
+<div class="sec" id="podstawowe">
+  <div class="st">Wyniki matur na poziomie podstawowym 2015–2025</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Język angielski P — szkoła vs kraj</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="angP"></svg>
+    </div>
+    <div class="card">
+      <div class="card-title">Matematyka P — szkoła vs kraj</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="matP"></svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Język polski P — szkoła vs kraj</div>
+    <svg viewBox="0 0 700 220" style="width:100%" id="polP"></svg>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Zestawienie wskaźników P (szkoła / kraj) 2015–2025</div>
+    <table class="dt">
+      <thead><tr><th>Rok</th><th>Pol P</th><th>Ang P</th><th>Mat P</th><th>Nabór (wskaźnik)</th><th>Ocena rocznika</th></tr></thead>
+      <tbody id="pTbody"></tbody>
+    </table>
+  </div>
+
+  <div class="hbox good">
+    <strong>Matematyka P — wyraźna poprawa od 2022:</strong> Po latach wahania wokół średniej krajowej (0,889–1,013), matematyka P przełamała barierę w 2022 r. (1,149) i kontynuuje wzrost — 2025 r. to wskaźnik 1,17, najlepszy w 11-letniej historii. Wynik absolutny 71,43% vs 61% krajowe to realna przewaga.
+  </div>
+  <div class="hbox info">
+    <strong>Angielski P — stabilna przewaga:</strong> Szkoła bije średnią krajową z angielskiego nieprzerwanie od 2015 r. Wskaźnik nigdy nie był poniżej 1,006. To najstabilniejsza pozytywna cecha XV LO w całej analizie.
+  </div>
+</div>
+
+<!-- ======= ROZSZERZONE ======= -->
+<div class="sec" id="rozszerzone">
+  <div class="st">Wyniki matur rozszerzonych 2015–2025</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Matematyka R — szkoła vs kraj (PROBLEM CHRONICZNY)</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="matR"></svg>
+    </div>
+    <div class="card">
+      <div class="card-title">Chemia R — szkoła vs kraj</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="chemR"></svg>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Geografia R — MOCNA STRONA szkoły</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="geoR"></svg>
+    </div>
+    <div class="card">
+      <div class="card-title">WOS R — wyraźna poprawa ostatnich lat</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="wosR"></svg>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Historia R — poprawa od 2021</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="histR"></svg>
+    </div>
+    <div class="card">
+      <div class="card-title">Biologia R — oscyluje wokół średniej</div>
+      <svg viewBox="0 0 340 220" style="width:100%" id="bioR"></svg>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Angielski R i Polski R — wskaźniki 2015–2025</div>
+    <svg viewBox="0 0 700 220" style="width:100%" id="jR"></svg>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Pełna tabela wyników rozszerzonych vs kraj 2015–2025</div>
+    <div style="overflow-x:auto">
+    <table class="dt">
+      <thead><tr><th>Rok</th><th>Mat R</th><th>Chem R</th><th>Geo R</th><th>Hist R</th><th>WOS R</th><th>Bio R</th><th>Pol R</th><th>Ang R</th></tr></thead>
+      <tbody id="rTbody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ======= WSKAZNIKI ======= -->
+<div class="sec" id="wskazniki">
+  <div class="st">Analiza wskaźnikowa — pozycja vs kraj przez 11 lat</div>
+
+  <div class="hbox gold">
+    <strong>Jak czytać wskaźnik:</strong> Wartość = wynik szkoły / średnia krajowa. Powyżej 1,0 = szkoła bije średnią krajową. Poniżej 1,0 = szkoła jest poniżej średniej. Wartość 1,20 oznacza wynik o 20% lepszy od średniej krajowej.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Heatmapa wskaźników — 11 lat × 8 przedmiotów</div>
+    <div style="overflow-x:auto">
+    <svg id="heatmap" viewBox="0 0 760 320" style="width:100%;min-width:600px"></svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ranking stabilności — ile razy powyżej/poniżej kraju</div>
+    <div id="stabBars"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Przedmioty według średniego wskaźnika 2015–2025</div>
+    <div id="avgIdx"></div>
+  </div>
+</div>
+
+<!-- ======= WNIOSKI ======= -->
+<div class="sec" id="wnioski">
+  <div class="st">Syntetyczne wnioski z analizy 11-letniej</div>
+
+  <div class="hbox good">
+    <strong>✅ Mocna strona #1 — JĘZYKI OBCE (trwała przewaga):</strong> Angielski podstawowy bił średnią krajową przez wszystkie 11 analizowanych lat. Wskaźnik nigdy poniżej 1,006, szczyt 1,192 (2022). Angielski rozszerzony podobnie — od 2021 konsekwentnie powyżej 1,10. To strukturalna, trwała przewaga szkoły, niezwiązana z konkretnym rocznikiem.
+  </div>
+
+  <div class="hbox good">
+    <strong>✅ Mocna strona #2 — GEOGRAFIA R (lider krajowy):</strong> Geografia rozszerzona to bezsprzecznie najlepsza dyscyplina szkoły w porównaniu z krajem. Wskaźnik w przedziale 0,95–1,62 przez 11 lat, nigdy poniżej średniej od 2016 r. Średnia z ostatnich 5 lat: 1,38. To unikatowa przewaga konkurencyjna.
+  </div>
+
+  <div class="hbox good">
+    <strong>✅ Mocna strona #3 — MATEMATYKA P (wyraźna poprawa):</strong> Matematyka podstawowa przeszła transformację: od wskaźnika 0,889 w 2020 r. do 1,17 w 2025 r. — co jest najlepszym wynikiem w 11-letniej historii. Trend jest jednoznacznie rosnący od 2021 r.
+  </div>
+
+  <div class="hbox warn">
+    <strong>⚠️ Słaba strona #1 — MATEMATYKA R (problem chroniczny, nie jednorazowy):</strong> To najpoważniejsza słabość szkoły w całej analizie. W 11 latach matematyka R była poniżej średniej krajowej przez <strong>9 razy</strong>. Wartości: 2015 (0,74), 2016 (0,44), 2017 (1,14), 2018 (0,56), 2019 (0,23!), 2020 (0,42), 2021 (brak danych), 2022 (0,68), 2023 (0,67), 2024 (1,30 — jednorazowy szczyt), 2025 (0,50). Jedyny dobry rok — 2024 — to wyjątek od reguły. Problem jest systemowy, a nie rocznikowy.
+  </div>
+
+  <div class="hbox warn">
+    <strong>⚠️ Słaba strona #2 — CHEMIA R (duże wahania, trend spadkowy):</strong> Chemia R to przedmiot o największych wahaniach wskaźnika spośród wszystkich (rozpiętość 0,48–1,24). Po rekordowym 2023 r. (1,24) nastąpił dramatyczny powrót do 0,77 w 2025 r. Szkoła nie potrafi utrzymać wysokiego poziomu chemii R ponad jeden rocznik.
+  </div>
+
+  <div class="hbox warn">
+    <strong>⚠️ Słaba strona #3 — BIOLOGIA R (konsekwentnie poniżej kraju przez 8 lat):</strong> Pomimo że szkoła oferuje profile biologiczne (biol-chem, biol-językowy), biologia rozszerzona przez 8 z 11 lat była poniżej średniej krajowej (0,65–0,87). Dopiero w 2022 r. i 2024–2025 r. przekroczyła 1,0. To paradoks szkoły o biologii jako jednym z profili flagowych.
+  </div>
+
+  <div class="hbox info">
+    <strong>ℹ️ Powiązanie rekrutacja → matura (kluczowe odkrycie):</strong> Dane pozwalają śledzić korelację między jakością naboru a wynikami maturalnymi 3 lata później. Nabór 2019 (wskaźnik 1,007 — pierwszy rok po podstawówce, niski wskaźnik) przełożył się na maturę 2022 — i to był paradoksalnie jeden z lepszych lat. Nabór 2021 (wskaźnik 1,43) → matura 2024 (rekord historii: mat R 1,30, ang R 1,45, hist R 1,29). To pokazuje, że <strong>jakość naboru ma wpływ na wyniki maturalne</strong>. Nabór 2024 (wskaźnik 1,05 — słaby) → matura 2027 — sygnał ostrzegawczy.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tabela syntetyczna — klasyfikacja 8 przedmiotów</div>
+    <table class="dt">
+      <thead><tr><th>Przedmiot</th><th>Śr. wskaźnik 2015–2025</th><th>Ile razy > 1,0</th><th>Trend ostatnich 3 lat</th><th>Klasyfikacja</th></tr></thead>
+      <tbody>
+        <tr><td>Angielski P</td><td>1,087</td><td>11/11</td><td><span class="pill g">→ stabilny wysoki</span></td><td><span class="pill g">LIDER</span></td></tr>
+        <tr><td>Geografia R</td><td>1,30</td><td>10/11</td><td><span class="pill g">→ stabilny wysoki</span></td><td><span class="pill g">LIDER</span></td></tr>
+        <tr><td>Angielski R</td><td>1,057</td><td>7/11</td><td><span class="pill g">↑ rosnący</span></td><td><span class="pill g">MOCNY</span></td></tr>
+        <tr><td>Polski P</td><td>1,073</td><td>9/11</td><td><span class="pill b">→ stabilny</span></td><td><span class="pill g">MOCNY</span></td></tr>
+        <tr><td>Matematyka P</td><td>1,007</td><td>6/11</td><td><span class="pill g">↑ wyraźnie rosnący</span></td><td><span class="pill b">POPRAWIAJĄCY SIĘ</span></td></tr>
+        <tr><td>WOS R</td><td>1,02</td><td>6/11</td><td><span class="pill b">→ nad średnią</span></td><td><span class="pill b">STABILNY</span></td></tr>
+        <tr><td>Historia R</td><td>0,95</td><td>5/11</td><td><span class="pill g">↑ poprawa od 2021</span></td><td><span class="pill y">POPRAWIAJĄCY SIĘ</span></td></tr>
+        <tr><td>Polski R</td><td>1,08</td><td>8/11</td><td><span class="pill y">↓ lekki spadek</span></td><td><span class="pill y">UWAGA</span></td></tr>
+        <tr><td>Biologia R</td><td>0,87</td><td>3/11</td><td><span class="pill b">→ powoli rosnący</span></td><td><span class="pill y">SŁABY / POPRAWA</span></td></tr>
+        <tr><td>Chemia R</td><td>0,80</td><td>4/11</td><td><span class="pill r">↓ spadek po 2023</span></td><td><span class="pill r">PROBLEM</span></td></tr>
+        <tr><td>Matematyka R</td><td>0,60</td><td>2/11</td><td><span class="pill r">↓ powrót do kryzysu</span></td><td><span class="pill r">CHRONICZNY PROBLEM</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="hbox gold">
+    <strong>💡 Wniosek końcowy — co naprawdę mówią 11 lat danych:</strong><br><br>
+    XV LO to szkoła o trwałej tożsamości językowej i geograficznej, która przez lata nie zbudowała silnej kultury wyników z przedmiotów ścisłych na poziomie rozszerzonym. Matematyka R jest problemem systemowym — w 9 z 11 lat poniżej średniej krajowej — nie efektem jednego słabego rocznika. Chemia R jest niestabilna strukturalnie. Biologia R poprawia się, ale wciąż nie odpowiada ambicjom szkoły z profilami biologicznymi.<br><br>
+    Z drugiej strony: nabór 2025 (213 kandydatów, wskaźnik 1,90) i wyniki matematyki P (wskaźnik 1,17 — rekord) to pierwsze sygnały, że szkoła jest w trakcie pozytywnej zmiany. Jeśli nabór z 2025 r. przełoży się na wyniki maturalne — co dane historyczne sugerują — to matura 2028 może być przełomowa.
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+const yrs = ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+
+// raw data [school, country]
+const DATA = {
+  polP:  [[60.28,65.7],[61.14,59.1],[68.06,56.4],[57.98,55.3],[59.05,51.8],[55.41,52.1],[62.06,55.2],[61.75,54.1],[70.86,65.6],[66.17,61.1],[63.46,59]],
+  angP:  [[78.54,76.7],[71.81,71.4],[81.81,71.5],[75.66,73.1],[78.25,72.4],[74.45,71.1],[84.47,76.3],[91.11,76.4],[90.16,84.6],[91.17,78.3],[82.3,78]],
+  matP:  [[49.90,54.7],[53.37,53.1],[55.24,54.5],[53.47,55.6],[54.91,58.4],[46.48,52.3],[55.94,56.4],[66.19,57.6],[68.19,71.0],[71.74,63.1],[71.43,61]],
+  matR:  [[30.4,41.3],[13.4,30.5],[42.0,36.9],[16.0,28.6],[9.0,38.6],[14.0,33.7],[0,31.4],[22.43,33.2],[33.6,50.2],[43.25,33.2],[16.44,33]],
+  chemR: [[31.4,51.7],[19.37,38.7],[19.4,41.2],[43.89,39.7],[26.25,40.2],[23.0,38.3],[22.8,35.0],[35.95,36.8],[57.47,46.5],[45.25,37.9],[33.07,43]],
+  geoR:  [[39.32,41.5],[51.93,38.8],[49.5,30.6],[35.64,30.4],[35.11,28.8],[25.63,20.5],[43.97,33.4],[58.68,40.4],[71.57,52.9],[54.44,40.9],[57.12,40]],
+  histR: [[39.43,49.8],[36.86,42.0],[22.4,33.3],[16.0,32.4],[30.55,36.8],[31.09,33.4],[38.3,36.6],[46.7,38.0],[47.6,45.1],[54.5,42.4],[46.58,45]],
+  wosR:  [[18.0,26.5],[21.0,26.9],[23.0,26.4],[17.33,27.9],[37.33,26.8],[30.5,29.3],[25.44,27.9],[48.7,30.4],[44.5,41.8],[43.25,34.8],[39.17,32]],
+  bioR:  [[28.16,43.0],[30.63,36.3],[27.35,36.6],[32.72,32.0],[24.41,33.2],[36.79,43.0],[28.65,33.2],[45.07,43.4],[41.78,48],[42.36,39.9],[46.74,46]],
+  polR:  [[74.73,60.8],[60.13,60.7],[36.25,49.7],[55.0,51.1],[51.7,55.3],[55.7,57.3],[59.81,49.1],[64.14,54.5],[60.13,49.7],[57.44,42.9],[51.97,46]],
+  angR:  [[61.4,63.2],[47.92,55.1],[62.2,59.6],[59.85,57.3],[54.77,56.2],[53.59,55.8],[73,65.0],[73.44,62.8],[75.62,68.9],[71.33,62.3],[74.13,64]],
+};
+
+const IDX = {};
+Object.keys(DATA).forEach(k => {
+  IDX[k] = DATA[k].map(([s,c]) => c>0 ? +(s/c).toFixed(3) : null);
+});
+
+// colors
+function idxColor(v) {
+  if(v===null) return '#6e859e';
+  if(v>=1.3) return '#27ae73';
+  if(v>=1.1) return '#7de0b5';
+  if(v>=1.0) return '#93c5f5';
+  if(v>=0.85) return '#f5d982';
+  if(v>=0.70) return '#f7a8a8';
+  return '#e05252';
+}
+
+function hex(c){ return c; }
+
+// === SVG DUAL LINE ===
+function dualLine(svgId, seriesData, label1, label2, col1, col2, W=340, H=220){
+  const svg = document.getElementById(svgId);
+  if(!svg) return;
+  const pad={l:42,r:16,t:18,b:36};
+  const w=W-pad.l-pad.r, h=H-pad.t-pad.b;
+  const allVals = seriesData.flat().filter(v=>v>0);
+  const mn = Math.floor(Math.min(...allVals)/10)*10;
+  const mx = Math.ceil(Math.max(...allVals)/10)*10+5;
+  const xStep = w/(yrs.length-1);
+  const ys = v => pad.t + h - ((v-mn)/(mx-mn))*h;
+  const xs = i => pad.l + i*xStep;
+
+  let html='';
+  // grid
+  for(let i=0;i<=4;i++){
+    const y=pad.t+(i/4)*h;
+    const v=mx-(i/4)*(mx-mn);
+    html+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+w}" y2="${y}" stroke="rgba(255,255,255,0.05)"/>`;
+    html+=`<text x="${pad.l-4}" y="${y+4}" text-anchor="end" fill="#6e859e" font-size="9">${Math.round(v)}</text>`;
+  }
+  yrs.forEach((yr,i)=>{
+    html+=`<text x="${xs(i)}" y="${H-8}" text-anchor="middle" fill="#6e859e" font-size="9">${yr.slice(2)}</text>`;
+  });
+
+  [[seriesData.map(d=>d[0]),col1,label1],[seriesData.map(d=>d[1]),col2,label2]].forEach(([vals,col,lbl],si)=>{
+    const pts = vals.map((v,i)=>v>0?[xs(i),ys(v)]:null).filter(Boolean);
+    if(!pts.length) return;
+    // area
+    let area=`M${pts[0][0]},${pad.t+h}`;
+    pts.forEach(p=>area+=` L${p[0]},${p[1]}`);
+    area+=` L${pts[pts.length-1][0]},${pad.t+h} Z`;
+    html+=`<path d="${area}" fill="${col}" fill-opacity="0.07"/>`;
+    // line
+    let line=`M${pts[0][0]},${pts[0][1]}`;
+    for(let i=1;i<pts.length;i++){
+      const cpx=(pts[i-1][0]+pts[i][0])/2;
+      line+=` C${cpx},${pts[i-1][1]} ${cpx},${pts[i][1]} ${pts[i][0]},${pts[i][1]}`;
+    }
+    html+=`<path d="${line}" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round" ${si===1?'stroke-dasharray="4,3"':''}/>`;
+    pts.forEach(([px,py])=>{
+      html+=`<circle cx="${px}" cy="${py}" r="3.5" fill="${col}" stroke="var(--card)" stroke-width="1.5"/>`;
+    });
+    // legend
+    html+=`<rect x="${pad.l+(si===0?0:80)}" y="${pad.t-14}" width="12" height="3" rx="1" fill="${col}"/>`;
+    html+=`<text x="${pad.l+(si===0?14:94)}" y="${pad.t-9}" fill="#9ab0c8" font-size="9">${lbl}</text>`;
+  });
+  svg.innerHTML=html;
+}
+
+// === SINGLE LINE ===
+function singleLine(svgId, vals, col, W=340, H=220, mn_hint=null, mx_hint=null){
+  const svg=document.getElementById(svgId);
+  if(!svg) return;
+  const pad={l:40,r:16,t:18,b:36};
+  const w=W-pad.l-pad.r, h=H-pad.t-pad.b;
+  const clean=vals.filter(v=>v!==null&&v>0);
+  const mn=mn_hint||Math.floor(Math.min(...clean)*10)/10;
+  const mx=mx_hint||Math.ceil(Math.max(...clean)*10)/10;
+  const xStep=w/(yrs.length-1);
+  const ys=v=>pad.t+h-((v-mn)/(mx-mn))*h;
+  const xs=i=>pad.l+i*xStep;
+  const refY=ys(1.0);
+
+  let html='';
+  // 1.0 line
+  if(refY>=pad.t&&refY<=pad.t+h){
+    html+=`<line x1="${pad.l}" y1="${refY}" x2="${pad.l+w}" y2="${refY}" stroke="rgba(240,180,41,0.4)" stroke-width="1" stroke-dasharray="3,3"/>`;
+    html+=`<text x="${pad.l+w+2}" y="${refY+4}" fill="var(--gold)" font-size="8">1,0</text>`;
+  }
+  // grid
+  for(let i=0;i<=4;i++){
+    const y=pad.t+(i/4)*h;
+    const v=mx-(i/4)*(mx-mn);
+    html+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+w}" y2="${y}" stroke="rgba(255,255,255,0.04)"/>`;
+    html+=`<text x="${pad.l-4}" y="${y+4}" text-anchor="end" fill="#6e859e" font-size="9">${v.toFixed(2)}</text>`;
+  }
+  yrs.forEach((yr,i)=>{
+    html+=`<text x="${xs(i)}" y="${H-8}" text-anchor="middle" fill="#6e859e" font-size="9">${yr.slice(2)}</text>`;
+  });
+  const pts=vals.map((v,i)=>v!==null&&v>0?[xs(i),ys(v)]:null);
+  // area
+  const vPts=pts.filter(Boolean);
+  if(vPts.length>1){
+    let area=`M${vPts[0][0]},${pad.t+h}`;
+    vPts.forEach(p=>area+=` L${p[0]},${p[1]}`);
+    area+=` L${vPts[vPts.length-1][0]},${pad.t+h} Z`;
+    html+=`<path d="${area}" fill="${col}" fill-opacity="0.1"/>`;
+    let line=`M${vPts[0][0]},${vPts[0][1]}`;
+    for(let i=1;i<vPts.length;i++){
+      const cpx=(vPts[i-1][0]+vPts[i][0])/2;
+      line+=` C${cpx},${vPts[i-1][1]} ${cpx},${vPts[i][1]} ${vPts[i][0]},${vPts[i][1]}`;
+    }
+    html+=`<path d="${line}" fill="none" stroke="${col}" stroke-width="2.5"/>`;
+  }
+  pts.forEach((p,i)=>{
+    if(!p) return;
+    const v=vals[i];
+    const dotCol=v>=1.0?'#27ae73':v>=0.85?'#f5d982':'#e05252';
+    html+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${dotCol}" stroke="var(--card)" stroke-width="1.5"/>`;
+    html+=`<text x="${p[0]}" y="${p[1]-7}" text-anchor="middle" fill="${dotCol}" font-size="8.5" font-weight="600">${v.toFixed(2)}</text>`;
+  });
+  svg.innerHTML=html;
+}
+
+// === HEATMAP ===
+function buildHeatmap(){
+  const svg=document.getElementById('heatmap');
+  if(!svg) return;
+  const subjects=[
+    {key:'matR', lbl:'Mat R'},
+    {key:'chemR',lbl:'Chem R'},
+    {key:'bioR', lbl:'Bio R'},
+    {key:'histR',lbl:'Hist R'},
+    {key:'wosR', lbl:'WOS R'},
+    {key:'geoR', lbl:'Geo R'},
+    {key:'polR', lbl:'Pol R'},
+    {key:'angR', lbl:'Ang R'},
+    {key:'matP', lbl:'Mat P'},
+    {key:'polP', lbl:'Pol P'},
+    {key:'angP', lbl:'Ang P'},
+  ];
+  const pad={l:52,t:28,r:10,b:24};
+  const W=760,H=320;
+  const cellW=(W-pad.l-pad.r)/yrs.length;
+  const cellH=(H-pad.t-pad.b)/subjects.length;
+  let html='';
+  yrs.forEach((yr,i)=>{
+    html+=`<text x="${pad.l+i*cellW+cellW/2}" y="18" text-anchor="middle" fill="#6e859e" font-size="10">${yr}</text>`;
+  });
+  subjects.forEach((s,j)=>{
+    html+=`<text x="${pad.l-4}" y="${pad.t+j*cellH+cellH/2+4}" text-anchor="end" fill="#9ab0c8" font-size="10">${s.lbl}</text>`;
+    IDX[s.key].forEach((v,i)=>{
+      const x=pad.l+i*cellW+2, y=pad.t+j*cellH+2;
+      const cw=cellW-4, ch=cellH-4;
+      const fill=v===null?'#1c2a3e':v>=1.3?'#1a6b3c':v>=1.1?'#27ae73':v>=1.0?'#3a85c8':v>=0.85?'#e8a825':v>=0.70?'#e05252':'#8b1a1a';
+      html+=`<rect x="${x}" y="${y}" width="${cw}" height="${ch}" fill="${fill}" rx="2"/>`;
+      if(v!==null){
+        html+=`<text x="${x+cw/2}" y="${y+ch/2+4}" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="9" font-weight="600">${v.toFixed(2)}</text>`;
+      }
+    });
+  });
+  // legend
+  const lx=pad.l, ly=H-16;
+  const cats=[{c:'#1a6b3c',l:'≥1.30'},{c:'#27ae73',l:'≥1.10'},{c:'#3a85c8',l:'≥1.00'},{c:'#e8a825',l:'≥0.85'},{c:'#e05252',l:'≥0.70'},{c:'#8b1a1a',l:'<0.70'}];
+  cats.forEach((c,i)=>{
+    html+=`<rect x="${lx+i*90}" y="${ly}" width="12" height="10" fill="${c.c}" rx="1"/>`;
+    html+=`<text x="${lx+i*90+15}" y="${ly+9}" fill="#6e859e" font-size="9">${c.l}</text>`;
+  });
+  svg.innerHTML=html;
+}
+
+// === STABILITY BARS ===
+function buildStabBars(){
+  const el=document.getElementById('stabBars');
+  if(!el) return;
+  const subjects=[
+    {key:'angP', lbl:'Angielski P'},
+    {key:'geoR', lbl:'Geografia R'},
+    {key:'polP', lbl:'Polski P'},
+    {key:'angR', lbl:'Angielski R'},
+    {key:'polR', lbl:'Polski R'},
+    {key:'wosR', lbl:'WOS R'},
+    {key:'matP', lbl:'Matematyka P'},
+    {key:'histR',lbl:'Historia R'},
+    {key:'bioR', lbl:'Biologia R'},
+    {key:'chemR',lbl:'Chemia R'},
+    {key:'matR', lbl:'Matematyka R'},
+  ];
+  let html='';
+  subjects.forEach(s=>{
+    const vals=IDX[s.key].filter(v=>v!==null);
+    const above=vals.filter(v=>v>=1.0).length;
+    const tot=vals.length;
+    const avg=(vals.reduce((a,b)=>a+b,0)/tot).toFixed(2);
+    const pct=above/tot*100;
+    const col=pct>=80?'#27ae73':pct>=60?'#3a85c8':pct>=40?'#e8a825':'#e05252';
+    html+=`<div class="barh">
+      <div class="barh-lbl" style="color:#dce8f5">${s.lbl}</div>
+      <div class="barh-track">
+        <div class="barh-fill" style="width:${pct}%;background:${col}">
+          <span>${above}/${tot}</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:${col};font-weight:600;width:40px;text-align:right">ø${avg}</div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+// === AVG INDEX BARS ===
+function buildAvgIdx(){
+  const el=document.getElementById('avgIdx');
+  if(!el) return;
+  const subjects=[
+    {key:'geoR', lbl:'Geografia R'},
+    {key:'angP', lbl:'Angielski P'},
+    {key:'angR', lbl:'Angielski R'},
+    {key:'polR', lbl:'Polski R'},
+    {key:'polP', lbl:'Polski P'},
+    {key:'wosR', lbl:'WOS R'},
+    {key:'matP', lbl:'Matematyka P'},
+    {key:'histR',lbl:'Historia R'},
+    {key:'bioR', lbl:'Biologia R'},
+    {key:'chemR',lbl:'Chemia R'},
+    {key:'matR', lbl:'Matematyka R'},
+  ];
+  const avgs=subjects.map(s=>{
+    const vals=IDX[s.key].filter(v=>v!==null);
+    return {lbl:s.lbl, avg:+(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(3)};
+  });
+  const max=Math.max(...avgs.map(a=>a.avg));
+  let html='';
+  avgs.forEach(({lbl,avg})=>{
+    const pct=avg/max*100;
+    const col=avg>=1.1?'#27ae73':avg>=1.0?'#3a85c8':avg>=0.85?'#e8a825':'#e05252';
+    html+=`<div class="barh">
+      <div class="barh-lbl">${lbl}</div>
+      <div class="barh-track">
+        <div class="barh-fill" style="width:${pct}%;background:${col}">
+          <span>${avg}</span>
+        </div>
+      </div>
+      <div style="width:6px;height:16px;background:${avg>=1.0?'var(--green)':'var(--red)'};border-radius:2px;flex-shrink:0"></div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+// === PROFILE BARS ===
+function buildProfileBars(){
+  const el=document.getElementById('profileBars');
+  if(!el) return;
+  const recent=['2020','2021','2022','2023','2024','2025'];
+  const idxR=yrs.map((y,i)=>i).filter(i=>recent.includes(yrs[i]));
+  const subjects=[
+    {key:'angP', lbl:'Ang P', col:'#27ae73'},
+    {key:'geoR', lbl:'Geo R', col:'#27ae73'},
+    {key:'angR', lbl:'Ang R', col:'#27ae73'},
+    {key:'polP', lbl:'Pol P', col:'#3a85c8'},
+    {key:'wosR', lbl:'WOS R', col:'#3a85c8'},
+    {key:'histR',lbl:'Hist R', col:'#3a85c8'},
+    {key:'polR', lbl:'Pol R', col:'#e8a825'},
+    {key:'matP', lbl:'Mat P', col:'#e8a825'},
+    {key:'bioR', lbl:'Bio R', col:'#e87a30'},
+    {key:'chemR',lbl:'Che R', col:'#e05252'},
+    {key:'matR', lbl:'Mat R', col:'#e05252'},
+  ];
+  let html='';
+  subjects.forEach(s=>{
+    const vals=idxR.map(i=>IDX[s.key][i]).filter(v=>v!==null);
+    const avg=+(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
+    const pct=Math.min(avg/1.6*100,100);
+    const refPct=1.0/1.6*100;
+    html+=`<div class="barh">
+      <div class="barh-lbl" style="color:${s.col}">${s.lbl}</div>
+      <div class="barh-track" style="position:relative">
+        <div class="barh-fill" style="width:${pct}%;background:${s.col}85">
+          <span style="color:${s.col}">${avg}</span>
+        </div>
+        <div style="position:absolute;top:0;left:${refPct}%;width:1px;height:100%;background:rgba(240,180,41,0.6)"></div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+// === RECRUITMENT ===
+function buildRecBars(){
+  const el=document.getElementById('recBars');
+  if(!el) return;
+  const data=[
+    {yr:'2019',n:141,cap:140},
+    {yr:'2020',n:129,cap:112},
+    {yr:'2021',n:160,cap:112},
+    {yr:'2022',n:235,cap:112},
+    {yr:'2023',n:433,cap:224},
+    {yr:'2024',n:118,cap:112},
+    {yr:'2025',n:213,cap:112},
+  ];
+  const max=450;
+  let html='';
+  data.forEach(d=>{
+    const pct=d.n/max*100;
+    const capPct=d.cap/max*100;
+    const col=d.n/d.cap>=1.5?'#27ae73':d.n/d.cap>=1.1?'#3a85c8':'#e8a825';
+    html+=`<div class="barh">
+      <div class="barh-lbl">${d.yr}</div>
+      <div class="barh-track" style="position:relative">
+        <div class="barh-fill" style="width:${pct}%;background:${col}">
+          <span>${d.n}</span>
+        </div>
+        <div style="position:absolute;top:0;left:${capPct}%;width:2px;height:100%;background:rgba(240,180,41,0.7)"></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);width:70px;flex-shrink:0">lim: ${d.cap}</div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+function buildRecRatio(){
+  const svg=document.getElementById('recRatio');
+  if(!svg) return;
+  const data=[
+    {yr:'2019',r:1.007},{yr:'2020',r:1.15},{yr:'2021',r:1.43},
+    {yr:'2022',r:2.098},{yr:'2023',r:1.93},{yr:'2024',r:1.05},{yr:'2025',r:1.9},
+  ];
+  singleLine('recRatio',data.map(d=>d.r),'#f0b429',340,240,0.8,2.3);
+  // re-do with year labels
+  const pad={l:42,r:16,t:18,b:36};
+  const W=340,H=240;
+  const w=W-pad.l-pad.r, h=H-pad.t-pad.b;
+  const mn=0.8,mx=2.3;
+  const xs=i=>pad.l+i*(w/(data.length-1));
+  const ys=v=>pad.t+h-((v-mn)/(mx-mn))*h;
+  let extra='';
+  data.forEach((d,i)=>{
+    extra+=`<text x="${xs(i)}" y="${H-8}" text-anchor="middle" fill="#6e859e" font-size="9">${d.yr.slice(2)}</text>`;
+  });
+  svg.innerHTML += extra;
+}
+
+// === MAIN TREND ===
+function buildMainTrend(){
+  const svg=document.getElementById('mainTrend');
+  if(!svg) return;
+  const W=700,H=260;
+  const pad={l:44,r:80,t:20,b:38};
+  const w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+  const series=[
+    {vals:IDX.angP, col:'#27ae73', lbl:'Ang P', dash:''},
+    {vals:IDX.matP, col:'#f0b429', lbl:'Mat P', dash:''},
+    {vals:IDX.geoR, col:'#3a85c8', lbl:'Geo R', dash:''},
+    {vals:IDX.matR, col:'#e05252', lbl:'Mat R', dash:'4,3'},
+    {vals:IDX.chemR,col:'#e87a30', lbl:'Che R', dash:'4,3'},
+  ];
+  const mn=0.1, mx=1.7;
+  const xs=i=>pad.l+i*(w/(yrs.length-1));
+  const ys=v=>pad.t+h-((v-mn)/(mx-mn))*h;
+  let html='';
+  // grid
+  [0.5,0.75,1.0,1.25,1.5].forEach(v=>{
+    const y=ys(v);
+    html+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+w}" y2="${y}" stroke="${v===1.0?'rgba(240,180,41,0.3)':'rgba(255,255,255,0.05)'}" stroke-width="${v===1.0?1.5:1}" ${v===1.0?'stroke-dasharray="4,4"':''}/>`;
+    html+=`<text x="${pad.l-4}" y="${y+4}" text-anchor="end" fill="#6e859e" font-size="9">${v.toFixed(2)}</text>`;
+  });
+  yrs.forEach((yr,i)=>{
+    html+=`<text x="${xs(i)}" y="${H-10}" text-anchor="middle" fill="#6e859e" font-size="9.5">${yr}</text>`;
+  });
+
+  series.forEach((s,si)=>{
+    const pts=s.vals.map((v,i)=>v!==null?[xs(i),ys(v)]:null);
+    const vp=pts.filter(Boolean);
+    if(vp.length<2) return;
+    let line=`M${vp[0][0]},${vp[0][1]}`;
+    for(let i=1;i<vp.length;i++){
+      const cpx=(vp[i-1][0]+vp[i][0])/2;
+      line+=` C${cpx},${vp[i-1][1]} ${cpx},${vp[i][1]} ${vp[i][0]},${vp[i][1]}`;
+    }
+    html+=`<path d="${line}" fill="none" stroke="${s.col}" stroke-width="2" stroke-linecap="round" stroke-dasharray="${s.dash||''}"/>`;
+    vp.forEach(([px,py])=>{
+      html+=`<circle cx="${px}" cy="${py}" r="3" fill="${s.col}" stroke="var(--card)" stroke-width="1.5"/>`;
+    });
+    // label
+    const last=vp[vp.length-1];
+    html+=`<text x="${last[0]+8}" y="${last[1]+4}" fill="${s.col}" font-size="10" font-weight="600">${s.lbl}</text>`;
+  });
+  svg.innerHTML=html;
+}
+
+// === P TABLE ===
+function buildPTable(){
+  const nabor=['','','','','1,007','1,15','1,43','1,236*','','',''];
+  const rData={polP:IDX.polP,angP:IDX.angP,matP:IDX.matP};
+  let html='';
+  yrs.forEach((yr,i)=>{
+    const pp=IDX.polP[i], ap=IDX.angP[i], mp=IDX.matP[i];
+    const good=v=>v>=1.0;
+    html+=`<tr>
+      <td>${yr}</td>
+      <td><span style="color:${good(pp)?'#7de0b5':'#f7a8a8'}">${pp?.toFixed(3)||'—'}</span></td>
+      <td><span style="color:${good(ap)?'#7de0b5':'#f7a8a8'}">${ap?.toFixed(3)||'—'}</span></td>
+      <td><span style="color:${good(mp)?'#7de0b5':'#f7a8a8'}">${mp?.toFixed(3)||'—'}</span></td>
+      <td>${nabor[i]||'—'}</td>
+      <td>${[pp,ap,mp].filter(v=>v>=1.0).length>=2?'<span class="pill g">Dobry</span>':'<span class="pill y">Mieszany</span>'}</td>
+    </tr>`;
+  });
+  document.getElementById('pTbody').innerHTML=html;
+}
+
+// === R TABLE ===
+function buildRTable(){
+  const keys=['matR','chemR','geoR','histR','wosR','bioR','polR','angR'];
+  let html='';
+  yrs.forEach((yr,i)=>{
+    const vals=keys.map(k=>IDX[k][i]);
+    html+=`<tr>
+      <td><strong>${yr}</strong></td>
+      ${vals.map(v=>`<td><span style="font-size:12px;font-weight:600;color:${v===null?'#6e859e':v>=1.1?'#7de0b5':v>=1.0?'#93c5f5':v>=0.85?'#f5d982':'#f7a8a8'}">${v?.toFixed(2)||'—'}</span></td>`).join('')}
+    </tr>`;
+  });
+  document.getElementById('rTbody').innerHTML=html;
+}
+
+// === TAB NAV ===
+function go(id, el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('on');
+  el.classList.add('active');
+  renderTab(id);
+}
+
+function renderTab(id){
+  if(id==='dashboard'){ buildMainTrend(); buildProfileBars(); buildRadar(); }
+  if(id==='rekrutacja'){ buildRecBars(); buildRecRatio(); }
+  if(id==='podstawowe'){ dualLine('angP',DATA.angP,'XV LO','Kraj','#27ae73','#6e859e'); dualLine('matP',DATA.matP,'XV LO','Kraj','#f0b429','#6e859e'); dualLine('polP',DATA.polP,'XV LO','Kraj','#3a85c8','#6e859e',700,220); buildPTable(); }
+  if(id==='rozszerzone'){ singleLine('matR',IDX.matR,'#e05252'); singleLine('chemR',IDX.chemR,'#e87a30'); singleLine('geoR',IDX.geoR,'#27ae73'); singleLine('wosR',IDX.wosR,'#8b7fe8'); singleLine('histR',IDX.histR,'#3a85c8'); singleLine('bioR',IDX.bioR,'#0fb8a0'); dualLine('jR',[...yrs.map((_,i)=>[IDX.angR[i],IDX.polR[i]])],'Ang R','Pol R','#27ae73','#3a85c8',700,220); buildRTable(); }
+  if(id==='wskazniki'){ buildHeatmap(); buildStabBars(); buildAvgIdx(); }
+}
+
+function buildRadar(){
+  const svg=document.getElementById('radar');
+  if(!svg) return;
+  const W=380,H=300;
+  const cx=W/2,cy=H/2-10,r=100;
+  const axes=[
+    {lbl:'Ang P',key:'angP'},{lbl:'Mat P',key:'matP'},{lbl:'Pol P',key:'polP'},
+    {lbl:'Ang R',key:'angR'},{lbl:'Pol R',key:'polR'},{lbl:'Mat R',key:'matR'},
+    {lbl:'Geo R',key:'geoR'},{lbl:'Bio R',key:'bioR'},{lbl:'Chem R',key:'chemR'},
+  ];
+  const n=axes.length;
+  const recent=yrs.slice(-5);
+  const idxRecent=yrs.map((y,i)=>i).filter(i=>recent.includes(yrs[i]));
+  const avgVals=axes.map(a=>{
+    const vals=idxRecent.map(i=>IDX[a.key][i]).filter(v=>v!==null);
+    return vals.length?vals.reduce((s,v)=>s+v,0)/vals.length:0.5;
+  });
+
+  const angle=i=>(i/n)*2*Math.PI-Math.PI/2;
+  const pt=(v,i)=>[cx+r*(Math.min(v,1.5)/1.5)*Math.cos(angle(i)), cy+r*(Math.min(v,1.5)/1.5)*Math.sin(angle(i))];
+
+  let html='';
+  // web
+  [0.5,0.75,1.0,1.25].forEach(scale=>{
+    const pts=axes.map((_,i)=>pt(scale,i));
+    html+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${scale===1.0?'rgba(240,180,41,0.3)':'rgba(255,255,255,0.06)'}" stroke-width="1"/>`;
+  });
+  axes.forEach((_,i)=>{
+    const [x,y]=pt(1.5,i);
+    html+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.07)"/>`;
+    const [lx,ly]=pt(1.65,i);
+    html+=`<text x="${lx}" y="${ly+4}" text-anchor="middle" fill="#9ab0c8" font-size="10">${axes[i].lbl}</text>`;
+  });
+  // data poly
+  const dataPts=avgVals.map((v,i)=>pt(v,i));
+  html+=`<polygon points="${dataPts.map(p=>p.join(',')).join(' ')}" fill="rgba(58,133,200,0.2)" stroke="#3a85c8" stroke-width="2"/>`;
+  dataPts.forEach(([px,py],i)=>{
+    const col=avgVals[i]>=1.0?'#27ae73':'#e05252';
+    html+=`<circle cx="${px}" cy="${py}" r="4" fill="${col}" stroke="var(--card)" stroke-width="1.5"/>`;
+  });
+  svg.innerHTML=html;
+}
+
+// Fix jR chart - needs correct data format
+const origGo=go;
+document.addEventListener('DOMContentLoaded',()=>{
+  renderTab('dashboard');
+  buildPTable();
+  buildRTable();
+});
+</script>
+</body>
+</html>

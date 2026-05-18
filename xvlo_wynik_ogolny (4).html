@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XV LO Poznań — Wynik ogólny 2015–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #f7f4ef;
+  color: #1a1a2e;
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+.page { max-width: 900px; margin: 0 auto; padding: 48px 28px 72px; }
+
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#c9891a; margin-bottom:10px; }
+h1 { font-family:'DM Serif Display',serif; font-size:clamp(26px,5vw,42px); line-height:1.1; margin-bottom:8px; color:#1a1a2e; }
+h1 em { font-style:italic; color:#c9891a; }
+.subtitle { font-size:14px; color:#7a7a8c; line-height:1.6; max-width:560px; margin-bottom:36px; }
+
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:32px; }
+.kpi { background:#fff; border-radius:12px; padding:16px 18px; border:1px solid #e2ddd6; }
+.kpi-label { font-size:11px; color:#7a7a8c; margin-bottom:6px; }
+.kpi-val { font-size:24px; font-weight:500; line-height:1; }
+.kpi-sub { font-size:11px; color:#7a7a8c; margin-top:5px; }
+.kpi-val.green { color:#1a6b3c; }
+.kpi-val.red   { color:#c0392b; }
+.kpi-val.amber { color:#9a6800; }
+.kpi-val.dark  { color:#1a1a2e; }
+
+.chart-card { background:#fff; border-radius:14px; border:1px solid #e2ddd6; padding:24px 24px 16px; margin-bottom:20px; }
+.chart-card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#7a7a8c; margin-bottom:20px; }
+
+.legend { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:20px; font-size:12px; color:#7a7a8c; align-items:center; }
+.legend-item { display:flex; align-items:center; gap:6px; }
+.leg-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.leg-line { width:22px; height:2px; flex-shrink:0; }
+.leg-dash { width:22px; height:0; border-top:2px dashed #c9891a; flex-shrink:0; }
+
+.canvas-wrap { position:relative; }
+
+.insight-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:20px; }
+@media(max-width:560px){ .insight-grid { grid-template-columns:1fr; } }
+.insight { border-radius:10px; padding:14px 16px; font-size:13px; line-height:1.6; }
+.insight strong { font-weight:500; display:block; margin-bottom:3px; }
+.insight.good { background:#edf7f2; border-left:3px solid #1a6b3c; color:#1a3d25; }
+.insight.warn { background:#fdf0ef; border-left:3px solid #c0392b; color:#5a1a1a; }
+.insight.gold { background:#fef8ec; border-left:3px solid #c9891a; color:#5a3a00; }
+.insight.info { background:#eef4fc; border-left:3px solid #1e5fa0; color:#0c2a4a; }
+
+footer { margin-top:48px; padding-top:20px; border-top:1px solid #e2ddd6; font-size:12px; color:#aaa; text-align:center; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">XV LO im. prof. Wiktora Degi · Poznań</div>
+  <h1>Wynik ogólny szkoły<br><em>2015–2025 · na tle średniej krajowej i rankingu</em></h1>
+  <p class="subtitle">Wskaźnik zbiorczy = średnia z wszystkich dostępnych wskaźników przedmiotowych (szkoła ÷ kraj). Wartość 1,0 oznacza dokładnie średnią krajową.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="kpi-label">Najlepszy rok</div>
+      <div class="kpi-val green">2024</div>
+      <div class="kpi-sub">wskaźnik 1,143</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Najgorszy rok</div>
+      <div class="kpi-val red">2016</div>
+      <div class="kpi-sub">wskaźnik 0,862</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Wynik 2025</div>
+      <div class="kpi-val dark">0,990</div>
+      <div class="kpi-sub">tuż pod krajową</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ranking Poznań 2026</div>
+      <div class="kpi-val amber">26.</div>
+      <div class="kpi-sub">było 15. w 2025 r.</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Lata powyżej kraju</div>
+      <div class="kpi-val green">4/11</div>
+      <div class="kpi-sub">2017, 2021–2024</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="leg-dot" style="background:#1a6b3c"></div> powyżej średniej krajowej</div>
+    <div class="legend-item"><div class="leg-dot" style="background:#c0392b"></div> poniżej średniej krajowej</div>
+    <div class="legend-item"><div class="leg-dash"></div> poziom 1,0 (kraj)</div>
+    <div class="legend-item"><div class="leg-line" style="background:#c9891a;opacity:.5"></div> trend (śr. ruchoma)</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-title">Wskaźnik zbiorczy szkoła / kraj · wszystkie przedmioty · 2015–2025</div>
+    <div class="canvas-wrap" style="height:300px">
+      <canvas id="main" role="img" aria-label="Wskaźnik zbiorczy XV LO względem średniej krajowej 2015–2025"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-title">Pozycja w Rankingu Liceów Poznania · 2021–2026 (oś odwrócona — im wyżej, tym lepiej)</div>
+    <div class="canvas-wrap" style="height:200px">
+      <canvas id="rank" role="img" aria-label="Pozycja XV LO w Rankingu Liceów Poznania 2021-2026"></canvas>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight good">
+      <strong>Rok 2024 — historyczny szczyt</strong>
+      Wskaźnik 1,143 to najlepszy zbiorczy wynik w 11-letniej historii danych. Bezpośredni efekt silnego naboru 2021 (wskaźnik 1,43).
+    </div>
+    <div class="insight warn">
+      <strong>Ranking 2026 — największy spadek</strong>
+      Wynik 2025 (0,990) jest zbliżony do 2021 (1,004), a mimo to szkoła spadła z 15. na 26. miejsce. Rosnąca konkurencja w Poznaniu zaostrzyła stawkę.
+    </div>
+    <div class="insight gold">
+      <strong>Trend 2016–2024 — powolna poprawa</strong>
+      Od historycznego dołka 0,862 w 2016 r. szkoła przez 8 lat systematycznie poprawiała wynik zbiorczy. Rok 2025 to korekta, nie odwrócenie trendu.
+    </div>
+    <div class="insight info">
+      <strong>Nabór 2025 → matura 2028</strong>
+      Nabór 2025 wyniósł 213 kandydatów (wskaźnik 1,90) — drugi najwyższy po rekordzie 2023. Jeśli korelacja nabór→matura się utrzyma, 2028 może być kolejnym szczytem.
+    </div>
+  </div>
+
+  <footer>Źródło: dokument wewnętrzny XV LO im. prof. Wiktora Degi · dane maturalne 2015–2025 · ranking WaszaEdukacja.pl</footer>
+
+</div>
+
+<script>
+const yrs11 = ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+const composite = [0.917, 0.862, 0.958, 0.884, 0.897, 0.885, 1.004, 1.138, 1.053, 1.143, 0.990];
+const ptBg = composite.map(v => v >= 1.0 ? '#1a6b3c' : '#c0392b');
+const ptR  = composite.map((v,i) => (i===composite.indexOf(Math.max(...composite))||i===composite.indexOf(Math.min(...composite))) ? 8 : 5);
+
+Chart.register({
+  id:'refLine',
+  afterDraw(chart){
+    if(chart.canvas.id !== 'main') return;
+    const {ctx, scales:{y,x}} = chart;
+    const yRef = y.getPixelForValue(1.0);
+    ctx.save();
+    ctx.setLineDash([5,4]);
+    ctx.strokeStyle = '#c9891a';
+    ctx.lineWidth = 1.3;
+    ctx.globalAlpha = 0.65;
+    ctx.beginPath();
+    ctx.moveTo(x.left, yRef);
+    ctx.lineTo(x.right, yRef);
+    ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    ctx.font = '500 11px DM Sans, sans-serif';
+    ctx.fillStyle = '#c9891a';
+    ctx.globalAlpha = 0.85;
+    ctx.fillText('średnia krajowa = 1,0', x.right - 150, yRef - 6);
+    ctx.restore();
+  }
+});
+
+new Chart(document.getElementById('main'), {
+  type: 'line',
+  data: {
+    labels: yrs11,
+    datasets: [
+      {
+        label: 'trend',
+        data: composite.map((_,i) => {
+          const s = [composite[Math.max(0,i-1)], composite[i], composite[Math.min(10,i+1)]];
+          return +(s.reduce((a,b)=>a+b,0)/s.length).toFixed(3);
+        }),
+        borderColor: '#c9891a',
+        borderWidth: 1.5,
+        borderDash: [6,3],
+        pointRadius: 0,
+        fill: false,
+        tension: 0.4,
+        order: 2,
+      },
+      {
+        label: 'wskaźnik zbiorczy',
+        data: composite,
+        borderColor: '#1a1a2e',
+        borderWidth: 2.5,
+        pointBackgroundColor: ptBg,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: ptR,
+        fill: { target:{value:1.0}, above:'rgba(26,107,60,0.10)', below:'rgba(192,57,43,0.10)' },
+        tension: 0.3,
+        order: 1,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode:'index', intersect:false },
+    plugins: {
+      legend: { display:false },
+      tooltip: {
+        backgroundColor: '#fff',
+        borderColor: '#e2ddd6',
+        borderWidth: 1,
+        titleColor: '#1a1a2e',
+        bodyColor: '#5a5a6e',
+        padding: 10,
+        callbacks: {
+          label: ctx => ctx.datasetIndex === 1
+            ? `wskaźnik: ${ctx.raw.toFixed(3)} (${ctx.raw>=1.0?'powyżej':'poniżej'} krajowej)`
+            : `trend: ${ctx.raw.toFixed(3)}`
+        }
+      }
+    },
+    scales: {
+      x: { grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{size:12,family:'DM Sans'},color:'#888'} },
+      y: {
+        min:0.75, max:1.22,
+        grid:{color:'rgba(0,0,0,0.06)'},
+        ticks:{font:{size:11,family:'DM Sans'},color:'#888',callback:v=>v.toFixed(2)}
+      }
+    }
+  }
+});
+
+const rankYrs  = ['2021','2022','2023','2024','2025','2026'];
+const rankVals = [20, 18, 20, 17, 15, 26];
+const rankCols = rankVals.map((v,i) => i===rankVals.length-1?'#c0392b': v<=17?'#1a6b3c':'#c9891a');
+
+new Chart(document.getElementById('rank'), {
+  type: 'line',
+  data: {
+    labels: rankYrs,
+    datasets: [{
+      data: rankVals,
+      borderColor: '#888',
+      borderWidth: 2,
+      pointBackgroundColor: rankCols,
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      pointRadius: 8,
+      fill: false,
+      tension: 0.25,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display:false },
+      tooltip: {
+        backgroundColor:'#fff', borderColor:'#e2ddd6', borderWidth:1,
+        titleColor:'#1a1a2e', bodyColor:'#5a5a6e', padding:10,
+        callbacks:{ label: ctx => `${ctx.raw}. miejsce w Poznaniu` }
+      }
+    },
+    scales: {
+      x:{ grid:{display:false}, ticks:{font:{size:12,family:'DM Sans'},color:'#888'} },
+      y:{
+        reverse:true, min:10, max:30,
+        grid:{color:'rgba(0,0,0,0.06)'},
+        ticks:{font:{size:11,family:'DM Sans'},color:'#888',stepSize:5,callback:v=>`${v}.`}
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

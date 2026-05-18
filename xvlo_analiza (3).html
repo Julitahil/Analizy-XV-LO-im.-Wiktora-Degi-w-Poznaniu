@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XV LO Poznań – Analiza Rankingowa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy2: #1b2d42;
+    --blue: #1e6091;
+    --sky: #2196a0;
+    --gold: #e8a825;
+    --red: #d64045;
+    --green: #3a7d44;
+    --light: #f4f7fb;
+    --muted: #8a9bae;
+    --white: #ffffff;
+    --card: #162233;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .hero {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b2d42 50%, #0d2540 100%);
+    padding: 52px 32px 40px;
+    border-bottom: 1px solid rgba(30,96,145,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content:'';
+    position:absolute; top:-60px; right:-80px;
+    width:400px; height:400px;
+    background: radial-gradient(circle, rgba(30,96,145,0.18) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .hero-badge {
+    display:inline-block;
+    background: rgba(232,168,37,0.15);
+    border: 1px solid rgba(232,168,37,0.4);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    padding: 5px 14px;
+    border-radius:20px;
+    margin-bottom:16px;
+  }
+  .hero h1 {
+    font-family:'Playfair Display', serif;
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight:900;
+    line-height:1.1;
+    margin-bottom:10px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub {
+    color: var(--muted);
+    font-size:14px;
+    font-weight:300;
+  }
+
+  /* TABS */
+  .tabs {
+    display:flex;
+    gap:4px;
+    padding:16px 32px 0;
+    background: var(--navy2);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab {
+    padding:10px 20px;
+    font-size:13px;
+    font-weight:500;
+    color: var(--muted);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition: all .2s;
+  }
+  .tab:hover { color: var(--white); }
+  .tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* CONTENT */
+  .content { padding: 32px; max-width:1100px; margin:0 auto; }
+  .section { display:none; }
+  .section.active { display:block; }
+
+  /* KPI CARDS */
+  .kpis {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap:16px;
+    margin-bottom:32px;
+  }
+  .kpi {
+    background: var(--card);
+    border-radius:12px;
+    padding:20px 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    position:relative;
+    overflow:hidden;
+  }
+  .kpi::after {
+    content:'';
+    position:absolute; bottom:0; left:0; right:0; height:3px;
+  }
+  .kpi.blue::after { background: var(--blue); }
+  .kpi.gold::after { background: var(--gold); }
+  .kpi.red::after  { background: var(--red); }
+  .kpi.green::after{ background: var(--green); }
+  .kpi.sky::after  { background: var(--sky); }
+  .kpi-label { font-size:11px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .kpi-val { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; line-height:1; }
+  .kpi-sub { font-size:11px; color:var(--muted); margin-top:6px; }
+  .kpi-delta { font-size:12px; font-weight:600; margin-top:4px; }
+  .kpi-delta.up { color: var(--red); }
+  .kpi-delta.down { color: var(--green); }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family:'Playfair Display',serif;
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title::after {
+    content:'';
+    flex:1; height:1px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* CHART WRAPPER */
+  .chart-wrap {
+    background: var(--card);
+    border-radius:14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding:24px;
+    margin-bottom:28px;
+  }
+  .chart-title {
+    font-size:13px;
+    font-weight:600;
+    color: var(--muted);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:20px;
+  }
+
+  /* SVG CHARTS */
+  svg text { font-family:'DM Sans',sans-serif; }
+
+  /* RANKING CHART – line */
+  .line-chart-svg { width:100%; height:220px; overflow:visible; }
+
+  /* BAR */
+  .bar-chart-svg { width:100%; height:260px; overflow:visible; }
+
+  /* MULTI-LINE */
+  .mline-svg { width:100%; height:280px; overflow:visible; }
+
+  /* TABLE */
+  .data-table {
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+  }
+  .data-table th {
+    font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px;
+    color:var(--muted); text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .data-table td {
+    padding:10px 12px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    vertical-align:middle;
+  }
+  .data-table tr:last-child td { border:none; }
+  .data-table tr:hover td { background:rgba(255,255,255,0.03); }
+
+  .pill {
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:600;
+  }
+  .pill.red    { background:rgba(214,64,69,.2);  color:#f08083; }
+  .pill.green  { background:rgba(58,125,68,.2);  color:#67c775; }
+  .pill.yellow { background:rgba(232,168,37,.2); color:#e8c96a; }
+  .pill.blue   { background:rgba(30,96,145,.2);  color:#6baadb; }
+
+  .bar-h { display:flex; align-items:center; gap:10px; margin:5px 0; }
+  .bar-h-label { font-size:12px; width:160px; flex-shrink:0; }
+  .bar-h-track { flex:1; background:rgba(255,255,255,0.06); border-radius:4px; height:18px; overflow:hidden; }
+  .bar-h-fill  { height:100%; border-radius:4px; transition: width .8s ease; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; }
+  .bar-h-fill span { font-size:11px; font-weight:600; color:rgba(255,255,255,0.85); }
+
+  .insight-box {
+    background: rgba(232,168,37,0.08);
+    border: 1px solid rgba(232,168,37,0.25);
+    border-radius:10px;
+    padding:16px 20px;
+    margin-bottom:20px;
+    font-size:13px;
+    line-height:1.6;
+    color:#e8d895;
+  }
+  .insight-box strong { color: var(--gold); }
+
+  .alert-box {
+    background: rgba(214,64,69,0.08);
+    border: 1px solid rgba(214,64,69,0.25);
+    border-radius:10px;
+    padding:16px 20px;
+    margin-bottom:20px;
+    font-size:13px;
+    line-height:1.6;
+    color:#f5a5a7;
+  }
+  .alert-box strong { color: #f08083; }
+
+  .good-box {
+    background: rgba(58,125,68,0.08);
+    border: 1px solid rgba(58,125,68,0.25);
+    border-radius:10px;
+    padding:16px 20px;
+    margin-bottom:20px;
+    font-size:13px;
+    line-height:1.6;
+    color:#9dd9a3;
+  }
+  .good-box strong { color: #67c775; }
+
+  .legend { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media(max-width:600px){ .grid-2 { grid-template-columns:1fr; } }
+
+  .year-selector {
+    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;
+  }
+  .yr-btn {
+    padding:5px 14px; border-radius:20px; font-size:12px; font-weight:500;
+    background:rgba(255,255,255,0.06); color:var(--muted);
+    cursor:pointer; border:1px solid transparent;
+    transition: all .2s;
+  }
+  .yr-btn:hover { color:var(--white); background:rgba(255,255,255,0.1); }
+  .yr-btn.active { background:rgba(232,168,37,0.15); color:var(--gold); border-color:rgba(232,168,37,0.4); }
+
+  .tooltip {
+    position:absolute;
+    background: #0d1b2a;
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:12px;
+    pointer-events:none;
+    opacity:0;
+    transition: opacity .15s;
+    z-index:100;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Raport Analityczny · Maj 2026</div>
+  <h1>XV Liceum im. prof. Wiktora Degi<br><span>Poznań — Analiza Rankingowa 2021–2026</span></h1>
+  <p class="hero-sub">Ranking WaszaEdukacja.pl · Wyniki Matur · Trendy i Wnioski</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showSection('overview',this)">📊 Przegląd</div>
+  <div class="tab" onclick="showSection('ranking',this)">🏆 Ranking</div>
+  <div class="tab" onclick="showSection('matury',this)">📝 Matury</div>
+  <div class="tab" onclick="showSection('przedmioty',this)">📚 Przedmioty</div>
+  <div class="tab" onclick="showSection('wnioski',this)">💡 Wnioski</div>
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<div class="content">
+<div class="section active" id="overview">
+
+  <div class="kpis">
+    <div class="kpi red">
+      <div class="kpi-label">Ranking 2026</div>
+      <div class="kpi-val" style="color:#f08083">26.</div>
+      <div class="kpi-sub">miejsce w Poznaniu</div>
+      <div class="kpi-delta up">↓ -11 vs. rok temu</div>
+    </div>
+    <div class="kpi gold">
+      <div class="kpi-label">Ranking 2025</div>
+      <div class="kpi-val" style="color:var(--gold)">15.</div>
+      <div class="kpi-sub">najlepszy wynik 6 lat</div>
+      <div class="kpi-delta down">↑ +2 vs. 2024</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Ang. podstawowy</div>
+      <div class="kpi-val" style="color:#67c775">92,6%</div>
+      <div class="kpi-sub">zdawalność 100%</div>
+      <div class="kpi-delta down">↑ +1,4pp vs. 2024</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-label">Mat. podstawowa</div>
+      <div class="kpi-val" style="color:#6baadb">71,4%</div>
+      <div class="kpi-sub">matura 2025</div>
+      <div class="kpi-delta" style="color:var(--muted)">→ stabilna</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Mat. rozszerzona</div>
+      <div class="kpi-val" style="color:#f08083">16,4%</div>
+      <div class="kpi-sub">9 maturzystów</div>
+      <div class="kpi-delta up">↓ -12pp vs. 2024</div>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    <strong>⚠️ Kluczowy sygnał ostrzegawczy:</strong> Po rekordowym 15. miejscu w 2025 r., szkoła spadła aż o 11 pozycji do miejsca 26. w 2026 r. To największy jednorazowy regres w analizowanym okresie i wynik gorszy niż w roku bazowym 2021 (20. miejsce).
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Trajektoria rankingowa 2021–2026 (im. niżej, tym gorzej)</div>
+    <svg class="line-chart-svg" viewBox="0 0 700 200" id="lineChart"></svg>
+  </div>
+
+  <div class="grid-2">
+    <div class="chart-wrap">
+      <div class="chart-title">Wyniki matur 2025 – poziom podstawowy</div>
+      <div id="bars-podstawowy"></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Zmiana liczby maturzystów (ogółem)</div>
+      <svg class="bar-chart-svg" viewBox="0 0 340 240" id="studentsChart"></svg>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== RANKING ===== -->
+<div class="section" id="ranking">
+  <div class="section-title">Historia rankingowa 2021–2026</div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Pozycja w Rankingu Liceów Poznań — oś odwrócona (wyżej = lepiej)</div>
+    <svg class="line-chart-svg" viewBox="0 0 700 220" style="height:260px" id="rankingBig"></svg>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Szczegółowe dane rankingowe</div>
+    <table class="data-table">
+      <thead><tr><th>Rok</th><th>Miejsce w Poznaniu</th><th>Zmiana r/r</th><th>Ocena</th></tr></thead>
+      <tbody>
+        <tr><td>2021</td><td>20</td><td>—</td><td><span class="pill yellow">punkt wyjścia</span></td></tr>
+        <tr><td>2022</td><td>18</td><td><span style="color:#67c775">↑ +2</span></td><td><span class="pill green">poprawa</span></td></tr>
+        <tr><td>2023</td><td>20</td><td><span style="color:#f08083">↓ -2</span></td><td><span class="pill red">regres</span></td></tr>
+        <tr><td>2024</td><td>17</td><td><span style="color:#67c775">↑ +3</span></td><td><span class="pill green">poprawa</span></td></tr>
+        <tr><td>2025</td><td>15</td><td><span style="color:#67c775">↑ +2</span></td><td><span class="pill green">rekord!</span></td></tr>
+        <tr><td>2026</td><td>26</td><td><span style="color:#f08083">↓ -11</span></td><td><span class="pill red">alarm</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-box">
+    <strong>Kontekst:</strong> Ranking WaszaEdukacja.pl opiera się głównie na wynikach maturalnych (procent zdawalności + średnie wyniki). Spadek z 15. na 26. miejsce nie musi oznaczać pogorszenia w liczbach absolutnych — może też wynikać z awansu konkurencji. Niemniej skala jest niepokojąca.
+  </div>
+</div>
+
+<!-- ===== MATURY ===== -->
+<div class="section" id="matury">
+  <div class="section-title">Wyniki maturalne 2021–2025</div>
+
+  <div class="year-selector" id="yearSel">
+    <div class="yr-btn active" onclick="showYear('2025',this)">2025</div>
+    <div class="yr-btn" onclick="showYear('2024',this)">2024</div>
+    <div class="yr-btn" onclick="showYear('2023',this)">2023</div>
+    <div class="yr-btn" onclick="showYear('2022',this)">2022</div>
+    <div class="yr-btn" onclick="showYear('2021',this)">2021</div>
+  </div>
+
+  <div id="yearTable"></div>
+
+  <div class="chart-wrap" style="margin-top:28px">
+    <div class="chart-title">Trend – język angielski podstawowy (%) wszystkie lata</div>
+    <svg class="mline-svg" viewBox="0 0 700 260" id="angChart"></svg>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Trend – matematyka podstawowa (%) wszystkie lata</div>
+    <svg class="mline-svg" viewBox="0 0 700 260" id="matChart"></svg>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Trend – język polski podstawowy (%) wszystkie lata</div>
+    <svg class="mline-svg" viewBox="0 0 700 260" id="polChart"></svg>
+  </div>
+</div>
+
+<!-- ===== PRZEDMIOTY ===== -->
+<div class="section" id="przedmioty">
+  <div class="section-title">Analiza przedmiotów rozszerzonych</div>
+
+  <div class="alert-box">
+    <strong>⚠️ Matematyka rozszerzona 2025:</strong> Zaledwie 16,44% średniego wyniku przy 9 zdających — drastyczny spadek z 28,86% w 2024 r. i 33,6% w 2023 r. To najsłabszy wynik w historii szkoły w tym zestawieniu.
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Porównanie przedmiotów rozszerzonych 2025 vs 2024 (średni wynik %)</div>
+    <div id="extComp"></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Trend biologia rozszerzona 2021–2025</div>
+    <svg class="mline-svg" viewBox="0 0 700 220" id="bioChart"></svg>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Trend chemia rozszerzona 2021–2025</div>
+    <svg class="mline-svg" viewBox="0 0 700 220" id="chemChart"></svg>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Wyniki rozszerzone 2025 – wszystkie przedmioty</div>
+    <table class="data-table">
+      <thead><tr><th>Przedmiot (R)</th><th>Śr. wynik 2025</th><th>Śr. wynik 2024</th><th>Zmiana</th><th>Zdających 2025</th></tr></thead>
+      <tbody>
+        <tr><td>Biologia</td><td>46,74%</td><td>42,36%</td><td><span style="color:#67c775">↑ +4,4pp</span></td><td>38</td></tr>
+        <tr><td>Chemia</td><td>33,07%</td><td>45,25%</td><td><span style="color:#f08083">↓ -12,2pp</span></td><td>15</td></tr>
+        <tr><td>Geografia</td><td>57,12%</td><td>54,44%</td><td><span style="color:#67c775">↑ +2,7pp</span></td><td>17</td></tr>
+        <tr><td>Historia</td><td>46,58%</td><td>54,54%</td><td><span style="color:#f08083">↓ -8,0pp</span></td><td>19</td></tr>
+        <tr><td>Język angielski</td><td>74,13%</td><td>71,33%</td><td><span style="color:#67c775">↑ +2,8pp</span></td><td>83</td></tr>
+        <tr><td>Język polski</td><td>51,97%</td><td>57,44%</td><td><span style="color:#f08083">↓ -5,5pp</span></td><td>32</td></tr>
+        <tr><td>Matematyka</td><td>16,44%</td><td>28,86%</td><td><span style="color:#f08083">↓ -12,4pp</span></td><td>9</td></tr>
+        <tr><td>WOS</td><td>39,17%</td><td>43,25%</td><td><span style="color:#f08083">↓ -4,1pp</span></td><td>6</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== WNIOSKI ===== -->
+<div class="section" id="wnioski">
+  <div class="section-title">Wnioski i rekomendacje</div>
+
+  <div class="alert-box">
+    <strong>🔴 Problem krytyczny — matematyka rozszerzona:</strong> Wynik 16,44% w 2025 r. (9 zdających) to zapaść. Nawet jeśli liczba zdających jest mała, wynik jest najniższy od 5 lat i wprost obniża pozycję rankingową. Wymaga natychmiastowej diagnozy.
+  </div>
+
+  <div class="alert-box">
+    <strong>🔴 Problem poważny — chemia rozszerzona:</strong> Wynik 33,07% po 45,25% w 2024 r. to spadek o ponad 12 pp. Opinie uczniów na portalu korespondują z tym wynikiem — wskazują na słabe przygotowanie do matury z chemii.
+  </div>
+
+  <div class="alert-box">
+    <strong>🔴 Problem znaczący — historia, język polski (R), WOS (R):</strong> Wszystkie trzy przedmioty zanotowały wyraźne pogorszenie w 2025 r. względem 2024 r.
+  </div>
+
+  <div class="good-box">
+    <strong>✅ Mocna strona — języki obce:</strong> Angielski podstawowy (92,57%) i rozszerzony (74,13%) to konsekwentnie najlepsze wyniki szkoły, rosnące rok do roku. Zdawalność 100% na poziomie podstawowym.
+  </div>
+
+  <div class="good-box">
+    <strong>✅ Mocna strona — biologia rozszerzona:</strong> 46,74% w 2025 r. to poprawa wobec 42,36% w 2024 r. — pozytywny trend po latach 40–45%.
+  </div>
+
+  <div class="good-box">
+    <strong>✅ Mocna strona — matematyka podstawowa:</strong> Wynik ~71% utrzymuje się stabilnie od 2023 r. (71,43% w 2025 r.).
+  </div>
+
+  <div class="insight-box">
+    <strong>💡 Kontekst rankingowy:</strong> Liczba maturzystów spadła wyraźnie — z ok. 155–160 w 2022 r. do 94–95 w 2025 r. Mniejszy rocznik oznacza, że słaby wynik kilku uczniów (np. 9 zdających matematykę R) nieproporcjonalnie mocno obniża średnią szkołową i pozycję w rankingu.
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Podsumowanie: Gdzie szkoła traci, gdzie zyskuje</div>
+    <table class="data-table">
+      <thead><tr><th>Obszar</th><th>Trend 2024→2025</th><th>Ocena</th><th>Priorytet działania</th></tr></thead>
+      <tbody>
+        <tr><td>Matematyka rozszerzona</td><td><span style="color:#f08083">↓ -12,4pp (do 16,4%)</span></td><td><span class="pill red">Kryzys</span></td><td>🔴 Wysoki</td></tr>
+        <tr><td>Chemia rozszerzona</td><td><span style="color:#f08083">↓ -12,2pp (do 33,1%)</span></td><td><span class="pill red">Zły</span></td><td>🔴 Wysoki</td></tr>
+        <tr><td>Historia rozszerzona</td><td><span style="color:#f08083">↓ -8,0pp (do 46,6%)</span></td><td><span class="pill yellow">Słaby</span></td><td>🟡 Średni</td></tr>
+        <tr><td>Język polski rozszerzony</td><td><span style="color:#f08083">↓ -5,5pp (do 52,0%)</span></td><td><span class="pill yellow">Słaby</span></td><td>🟡 Średni</td></tr>
+        <tr><td>Biologia rozszerzona</td><td><span style="color:#67c775">↑ +4,4pp (do 46,7%)</span></td><td><span class="pill green">Poprawa</span></td><td>🟢 Monitorować</td></tr>
+        <tr><td>Angielski podstawowy</td><td><span style="color:#67c775">↑ +1,4pp (do 92,6%)</span></td><td><span class="pill green">Bardzo dobry</span></td><td>🟢 Utrzymać</td></tr>
+        <tr><td>Matematyka podstawowa</td><td><span style="color:var(--muted)">→ stabilna (71,4%)</span></td><td><span class="pill blue">Dobry</span></td><td>🟢 Utrzymać</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div><!-- /content -->
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// ===== DATA =====
+const rankData = {
+  years: ['2021','2022','2023','2024','2025','2026'],
+  values: [20, 18, 20, 17, 15, 26]
+};
+
+const maturyData = {
+  '2025': [
+    {subject:'Biologia',type:'pisemny',level:'R',pass:'—',avg:46.74,n:38},
+    {subject:'Chemia',type:'pisemny',level:'R',pass:'—',avg:33.07,n:15},
+    {subject:'Geografia',type:'pisemny',level:'R',pass:'—',avg:57.12,n:17},
+    {subject:'Historia',type:'pisemny',level:'R',pass:'—',avg:46.58,n:19},
+    {subject:'Język angielski',type:'pisemny',level:'P',pass:'100%',avg:92.57,n:94},
+    {subject:'Język angielski',type:'pisemny',level:'R',pass:'—',avg:74.13,n:83},
+    {subject:'Język polski',type:'pisemny',level:'P',pass:'98,95%',avg:63.46,n:95},
+    {subject:'Język polski',type:'pisemny',level:'R',pass:'—',avg:51.97,n:32},
+    {subject:'Matematyka',type:'pisemny',level:'P',pass:'97,89%',avg:71.43,n:95},
+    {subject:'Matematyka',type:'pisemny',level:'R',pass:'—',avg:16.44,n:9},
+    {subject:'WOS',type:'pisemny',level:'R',pass:'—',avg:39.17,n:6},
+  ],
+  '2024': [
+    {subject:'Biologia',type:'pisemny',level:'R',pass:'—',avg:42.36,n:28},
+    {subject:'Chemia',type:'pisemny',level:'R',pass:'—',avg:45.25,n:16},
+    {subject:'Geografia',type:'pisemny',level:'R',pass:'—',avg:54.44,n:25},
+    {subject:'Historia',type:'pisemny',level:'R',pass:'—',avg:54.54,n:13},
+    {subject:'Język angielski',type:'pisemny',level:'P',pass:'100%',avg:91.17,n:87},
+    {subject:'Język angielski',type:'pisemny',level:'R',pass:'—',avg:71.33,n:69},
+    {subject:'Język polski',type:'pisemny',level:'P',pass:'100%',avg:66.17,n:87},
+    {subject:'Język polski',type:'pisemny',level:'R',pass:'—',avg:57.44,n:27},
+    {subject:'Matematyka',type:'pisemny',level:'P',pass:'100%',avg:71.74,n:87},
+    {subject:'Matematyka',type:'pisemny',level:'R',pass:'—',avg:28.86,n:7},
+    {subject:'WOS',type:'pisemny',level:'R',pass:'—',avg:43.25,n:4},
+  ],
+  '2023': [
+    {subject:'Biologia',type:'pisemny',level:'R',pass:'—',avg:41.78,n:50},
+    {subject:'Chemia',type:'pisemny',level:'R',pass:'—',avg:57.47,n:17},
+    {subject:'Geografia',type:'pisemny',level:'R',pass:'—',avg:71.57,n:21},
+    {subject:'Historia',type:'pisemny',level:'R',pass:'—',avg:47.63,n:16},
+    {subject:'Język angielski',type:'pisemny',level:'P',pass:'100%',avg:90.16,n:126},
+    {subject:'Język angielski',type:'pisemny',level:'R',pass:'—',avg:75.62,n:102},
+    {subject:'Język polski',type:'pisemny',level:'P',pass:'100%',avg:70.86,n:127},
+    {subject:'Język polski',type:'pisemny',level:'R',pass:'—',avg:60.13,n:60},
+    {subject:'Matematyka',type:'pisemny',level:'P',pass:'96,85%',avg:68.19,n:127},
+    {subject:'Matematyka',type:'pisemny',level:'R',pass:'—',avg:33.6,n:5},
+  ],
+  '2022': [
+    {subject:'Biologia',type:'pisemny',level:'R',pass:'—',avg:45.07,n:57},
+    {subject:'Chemia',type:'pisemny',level:'R',pass:'—',avg:35.95,n:20},
+    {subject:'Geografia',type:'pisemny',level:'R',pass:'—',avg:58.68,n:44},
+    {subject:'Historia',type:'pisemny',level:'R',pass:'—',avg:46.67,n:33},
+    {subject:'Język angielski',type:'pisemny',level:'P',pass:'100%',avg:91.11,n:155},
+    {subject:'Język angielski',type:'pisemny',level:'R',pass:'—',avg:73.44,n:122},
+    {subject:'Język polski',type:'pisemny',level:'P',pass:'100%',avg:61.75,n:160},
+    {subject:'Język polski',type:'pisemny',level:'R',pass:'—',avg:64.14,n:84},
+    {subject:'Matematyka',type:'pisemny',level:'P',pass:'97,5%',avg:66.19,n:160},
+    {subject:'Matematyka',type:'pisemny',level:'R',pass:'—',avg:22.43,n:14},
+  ],
+  '2021': [
+    {subject:'Biologia',type:'pisemny',level:'R',pass:'—',avg:28.65,n:20},
+    {subject:'Chemia',type:'pisemny',level:'R',pass:'—',avg:22.8,n:10},
+    {subject:'Geografia',type:'pisemny',level:'R',pass:'—',avg:43.97,n:32},
+    {subject:'Historia',type:'pisemny',level:'R',pass:'—',avg:38.29,n:14},
+    {subject:'Język angielski',type:'pisemny',level:'P',pass:'100%',avg:84.47,n:77},
+    {subject:'Język angielski',type:'pisemny',level:'R',pass:'—',avg:73,n:44},
+    {subject:'Język polski',type:'pisemny',level:'P',pass:'100%',avg:62.06,n:79},
+    {subject:'Język polski',type:'pisemny',level:'R',pass:'—',avg:59.81,n:31},
+    {subject:'Matematyka',type:'pisemny',level:'P',pass:'91,25%',avg:55.94,n:80},
+  ],
+};
+
+// ===== HELPERS =====
+function lerp(a,b,t){return a+(b-a)*t;}
+function makeLineSVG(svgId, years, series, colors, yMin, yMax, height=200, viewW=700){
+  const svg = document.getElementById(svgId);
+  if(!svg) return;
+  const pad = {l:50, r:20, t:20, b:40};
+  const w = viewW - pad.l - pad.r;
+  const h = height - pad.t - pad.b;
+  const xStep = w / (years.length-1);
+
+  let html = '';
+
+  // grid
+  for(let i=0;i<=4;i++){
+    const y = pad.t + h - (i/4)*h;
+    const val = yMin + (i/4)*(yMax-yMin);
+    html += `<line x1="${pad.l}" y1="${y}" x2="${pad.l+w}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+    html += `<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#8a9bae" font-size="10">${Math.round(val)}</text>`;
+  }
+
+  // x axis labels
+  years.forEach((yr,i)=>{
+    const x = pad.l + i*xStep;
+    html += `<text x="${x}" y="${pad.t+h+20}" text-anchor="middle" fill="#8a9bae" font-size="11">${yr}</text>`;
+  });
+
+  series.forEach((vals, si)=>{
+    const col = colors[si];
+    let points = vals.map((v,i)=>{
+      const x = pad.l + i*xStep;
+      const y = pad.t + h - ((v-yMin)/(yMax-yMin))*h;
+      return [x,y];
+    });
+
+    // area
+    let areaPath = `M${points[0][0]},${pad.t+h}`;
+    points.forEach(p => areaPath += ` L${p[0]},${p[1]}`);
+    areaPath += ` L${points[points.length-1][0]},${pad.t+h} Z`;
+    html += `<path d="${areaPath}" fill="${col}" fill-opacity="0.08"/>`;
+
+    // line
+    let linePath = `M${points[0][0]},${points[0][1]}`;
+    for(let i=1;i<points.length;i++){
+      const cp1x = (points[i-1][0]+points[i][0])/2;
+      linePath += ` C${cp1x},${points[i-1][1]} ${cp1x},${points[i][1]} ${points[i][0]},${points[i][1]}`;
+    }
+    html += `<path d="${linePath}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linecap="round"/>`;
+
+    // dots
+    points.forEach((p,i)=>{
+      html += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="${col}" stroke="#162233" stroke-width="2"/>`;
+      html += `<text x="${p[0]}" y="${p[1]-10}" text-anchor="middle" fill="${col}" font-size="11" font-weight="600">${vals[i]}</text>`;
+    });
+  });
+
+  svg.innerHTML = html;
+}
+
+function makeBarH(containerId, items){
+  // items: [{label, val2025, val2024}]
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  let html = '';
+  items.forEach(it=>{
+    const pct = Math.min(100, it.val);
+    let col = '#2196a0';
+    if(pct >= 70) col = '#3a7d44';
+    else if(pct >= 50) col = '#2196a0';
+    else if(pct >= 35) col = '#e8a825';
+    else col = '#d64045';
+    html += `<div class="bar-h">
+      <div class="bar-h-label">${it.label}</div>
+      <div class="bar-h-track">
+        <div class="bar-h-fill" style="width:${pct}%;background:${col}">
+          <span>${it.val.toFixed(1)}%</span>
+        </div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+// ===== RENDER LINE CHART (overview) =====
+function drawOverviewLine(){
+  // inverted ranking: higher y = worse rank
+  makeLineSVG('lineChart',
+    rankData.years,
+    [rankData.values],
+    ['#e8a825'],
+    10, 30, 200, 700
+  );
+}
+
+// ===== RENDER RANKING BIG =====
+function drawRankingBig(){
+  makeLineSVG('rankingBig',
+    rankData.years,
+    [rankData.values],
+    ['#e8a825'],
+    10, 30, 240, 700
+  );
+}
+
+// ===== BARS PODSTAWOWY =====
+function drawBarsMain(){
+  makeBarH('bars-podstawowy',[
+    {label:'Ang. podstawowy', val:92.57},
+    {label:'Mat. podstawowy', val:71.43},
+    {label:'Pol. podstawowy', val:63.46},
+  ]);
+}
+
+// ===== STUDENTS CHART =====
+function drawStudentsChart(){
+  const years = ['2021','2022','2023','2024','2025'];
+  const counts = [79,160,127,87,95];
+  const svg = document.getElementById('studentsChart');
+  if(!svg) return;
+  const pad={l:40,r:10,t:20,b:40};
+  const W=340, H=240;
+  const w=W-pad.l-pad.r, h=H-pad.t-pad.b;
+  const maxV=180;
+  const bw=36;
+  let html='';
+  const colors=['#2196a0','#3a7d44','#1e6091','#2196a0','#e8a825'];
+  years.forEach((yr,i)=>{
+    const x=pad.l + i*(w/(years.length-1)) - bw/2;
+    const bh=(counts[i]/maxV)*h;
+    const y=pad.t+h-bh;
+    html+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${colors[i]}" rx="4" fill-opacity="0.85"/>`;
+    html+=`<text x="${x+bw/2}" y="${y-6}" text-anchor="middle" fill="${colors[i]}" font-size="12" font-weight="600">${counts[i]}</text>`;
+    html+=`<text x="${x+bw/2}" y="${pad.t+h+18}" text-anchor="middle" fill="#8a9bae" font-size="11">${yr}</text>`;
+  });
+  // y grid
+  for(let i=0;i<=3;i++){
+    const y=pad.t+h-(i/3)*h;
+    const v=Math.round((i/3)*maxV);
+    html+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+w}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+    html+=`<text x="${pad.l-5}" y="${y+4}" text-anchor="end" fill="#8a9bae" font-size="10">${v}</text>`;
+  }
+  svg.innerHTML=html;
+}
+
+// ===== YEAR TABLE =====
+function showYear(yr, btn){
+  document.querySelectorAll('#yearSel .yr-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const data = maturyData[yr];
+  let html = `<div class="chart-wrap"><div class="chart-title">Wyniki matur ${yr}</div>
+  <table class="data-table">
+  <thead><tr><th>Przedmiot</th><th>Poziom</th><th>Śr. wynik</th><th>Zdawalność</th><th>Zdających</th><th>Ocena</th></tr></thead><tbody>`;
+  data.forEach(r=>{
+    let pill='blue', ptext='Dobry';
+    if(r.avg>=80){pill='green';ptext='Bardzo dobry';}
+    else if(r.avg>=60){pill='green';ptext='Dobry';}
+    else if(r.avg>=40){pill='yellow';ptext='Przeciętny';}
+    else{pill='red';ptext='Słaby';}
+    html+=`<tr>
+      <td>${r.subject}</td>
+      <td><span class="pill ${r.level==='P'?'blue':'yellow'}">${r.level}</span></td>
+      <td><strong>${r.avg.toFixed(2)}%</strong></td>
+      <td>${r.pass}</td>
+      <td>${r.n}</td>
+      <td><span class="pill ${pill}">${ptext}</span></td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div>`;
+  document.getElementById('yearTable').innerHTML=html;
+}
+
+// ===== TREND CHARTS =====
+function drawTrendCharts(){
+  const yrs=['2021','2022','2023','2024','2025'];
+  makeLineSVG('angChart', yrs, [[84.47,91.11,90.16,91.17,92.57]], ['#2196a0'], 75,100,260);
+  makeLineSVG('matChart', yrs, [[55.94,66.19,68.19,71.74,71.43]], ['#e8a825'], 40,85,260);
+  makeLineSVG('polChart', yrs, [[62.06,61.75,70.86,66.17,63.46]], ['#1e6091'], 50,80,260);
+  makeLineSVG('bioChart', yrs, [[28.65,45.07,41.78,42.36,46.74]], ['#3a7d44'], 20,60,220);
+  makeLineSVG('chemChart',yrs, [[22.8,35.95,57.47,45.25,33.07]], ['#d64045'], 10,70,220);
+}
+
+// ===== EXT COMP =====
+function drawExtComp(){
+  const items=[
+    {label:'Biologia (R)',   val25:46.74, val24:42.36},
+    {label:'Chemia (R)',     val25:33.07, val24:45.25},
+    {label:'Geografia (R)', val25:57.12, val24:54.44},
+    {label:'Historia (R)',  val25:46.58, val24:54.54},
+    {label:'Ang. (R)',      val25:74.13, val24:71.33},
+    {label:'Polski (R)',    val25:51.97, val24:57.44},
+    {label:'Mat. (R)',      val25:16.44, val24:28.86},
+  ];
+  const el=document.getElementById('extComp');
+  if(!el) return;
+  let html='<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:#e8a825"></div>2025</div><div class="legend-item"><div class="legend-dot" style="background:#2196a0"></div>2024</div></div>';
+  items.forEach(it=>{
+    const d=it.val25-it.val24;
+    const col25=it.val25>=50?'#e8a825':'#d64045';
+    const col24='#2196a0';
+    html+=`<div style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:5px">${it.label} <span style="font-size:11px;font-weight:600;color:${d>=0?'#67c775':'#f08083'}">${d>=0?'+':''}${d.toFixed(1)}pp</span></div>
+      <div class="bar-h"><div class="bar-h-track"><div class="bar-h-fill" style="width:${it.val25}%;background:${col25}"><span>${it.val25}%</span></div></div></div>
+      <div class="bar-h"><div class="bar-h-track"><div class="bar-h-fill" style="width:${it.val24}%;background:${col24};opacity:0.5"><span>${it.val24}%</span></div></div></div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+// ===== TAB NAVIGATION =====
+function showSection(id, el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  // lazy render
+  if(id==='ranking') drawRankingBig();
+  if(id==='matury'){ showYear('2025',document.querySelector('#yearSel .yr-btn')); drawTrendCharts(); }
+  if(id==='przedmioty'){ drawExtComp(); drawTrendCharts(); }
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded',()=>{
+  drawOverviewLine();
+  drawBarsMain();
+  drawStudentsChart();
+  showYear('2025', document.querySelector('#yearSel .yr-btn'));
+});
+</script>
+</body>
+</html>
