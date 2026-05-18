@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porównanie Liceów Poznań 2025 vs 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f1a;
+  --surface: #111827;
+  --surface2: #1a2335;
+  --border: rgba(255,255,255,0.07);
+  --text: #e8edf5;
+  --muted: #6b7a99;
+  --gold: #f0b429;
+  --red: #ef4444;
+  --green: #22c55e;
+  --blue: #3b82f6;
+  --purple: #a78bfa;
+  --teal: #14b8a6;
+  --xv-color: #f0b429;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Sora',sans-serif; font-size:14px; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #0a0f1a 0%, #0f1f35 60%, #0a0f1a 100%);
+  padding: 48px 32px 36px;
+  border-bottom: 1px solid var(--border);
+  position:relative; overflow:hidden;
+}
+.hero::after {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--blue), transparent);
+}
+.hero-eyebrow {
+  font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--gold); margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
+.hero h1 { font-size:clamp(22px,4vw,38px); font-weight:800; line-height:1.1; margin-bottom:10px; }
+.hero h1 em { font-style:normal; color:var(--gold); }
+.hero p { color:var(--muted); font-size:13px; max-width:600px; line-height:1.6; }
+
+/* SUMMARY STRIP */
+.summary-strip {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.strip-item {
+  background:var(--surface); padding:20px 24px;
+  display:flex; flex-direction:column; gap:4px;
+}
+.strip-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
+.strip-val { font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:600; line-height:1; }
+.strip-sub { font-size:11px; color:var(--muted); }
+
+/* TABS */
+.tabs { display:flex; gap:0; background:var(--surface); border-bottom:1px solid var(--border); overflow-x:auto; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab { padding:14px 22px; font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; letter-spacing:.5px; transition:all .2s; }
+.tab:hover { color:var(--text); background:rgba(255,255,255,0.03); }
+.tab.active { color:var(--gold); border-bottom-color:var(--gold); background:rgba(240,180,41,0.05); }
+
+/* CONTENT */
+.content { padding:28px 32px; max-width:1200px; margin:0 auto; }
+.section { display:none; }
+.section.active { display:block; }
+
+/* SECTION HEADING */
+.sh { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.sh::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* CARD */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:24px; }
+.card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:20px; }
+
+/* GRID */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+@media(max-width:700px){ .g2,.g3 { grid-template-columns:1fr; } }
+
+/* TABLE */
+table.dt { width:100%; border-collapse:collapse; font-size:12.5px; }
+table.dt th { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
+table.dt td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+table.dt tr:last-child td { border:none; }
+table.dt tr:hover td { background:rgba(255,255,255,0.02); }
+table.dt tr.highlight td { background:rgba(240,180,41,0.06); }
+table.dt tr.highlight td:first-child { border-left:3px solid var(--gold); }
+
+.badge { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; }
+.badge.red    { background:rgba(239,68,68,.15); color:#fca5a5; }
+.badge.green  { background:rgba(34,197,94,.15);  color:#86efac; }
+.badge.yellow { background:rgba(240,180,41,.15); color:#fde68a; }
+.badge.blue   { background:rgba(59,130,246,.15); color:#93c5fd; }
+.badge.purple { background:rgba(167,139,250,.15);color:#c4b5fd; }
+.badge.teal   { background:rgba(20,184,166,.15); color:#5eead4; }
+
+/* BUBBLE CHART via SVG */
+.bubble-wrap { width:100%; overflow:hidden; }
+
+/* HORIZONTAL BAR */
+.hbar { margin:6px 0; }
+.hbar-label { font-size:11.5px; color:var(--text); margin-bottom:3px; display:flex; justify-content:space-between; }
+.hbar-track { height:16px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:3px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; }
+.hbar-fill span { font-size:10px; font-weight:600; color:rgba(255,255,255,.85); font-family:'JetBrains Mono',monospace; }
+
+/* HIGHLIGHT BOX */
+.hbox { border-radius:10px; padding:16px 20px; margin-bottom:16px; font-size:13px; line-height:1.65; }
+.hbox.warn  { background:rgba(239,68,68,.07); border:1px solid rgba(239,68,68,.2); color:#fca5a5; }
+.hbox.info  { background:rgba(59,130,246,.07); border:1px solid rgba(59,130,246,.2); color:#93c5fd; }
+.hbox.good  { background:rgba(34,197,94,.07);  border:1px solid rgba(34,197,94,.2);  color:#86efac; }
+.hbox.gold  { background:rgba(240,180,41,.07); border:1px solid rgba(240,180,41,.2); color:#fde68a; }
+.hbox strong { font-weight:700; }
+
+/* DELTA INDICATOR */
+.delta { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; }
+.delta.up   { color:#fca5a5; }
+.delta.down { color:#86efac; }
+.delta.neu  { color:var(--muted); }
+
+/* RANK BADGE */
+.rank-num { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; display:inline-block; width:32px; text-align:right; }
+
+.xv-row td { font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Analiza Porównawcza · Poznań · Maj 2026</div>
+  <h1>Ranking Liceów Poznań<br><em>2025 vs 2026 — Kto zyskał, kto stracił?</em></h1>
+  <p>Szczegółowe porównanie zmian pozycji 30 publicznych liceów w Rankingu WaszaEdukacja.pl. Kontekst dla sytuacji XV LO im. prof. Wiktora Degi.</p>
+</div>
+
+<div class="summary-strip">
+  <div class="strip-item">
+    <div class="strip-label">Szkół w rankingu 2026</div>
+    <div class="strip-val" style="color:var(--blue)">61</div>
+    <div class="strip-sub">vs 57 w 2025 r.</div>
+  </div>
+  <div class="strip-item">
+    <div class="strip-label">Lider Poznania 2026</div>
+    <div class="strip-val" style="color:var(--gold)">VIII LO</div>
+    <div class="strip-sub">69,7 pkt – miejsce 3. w Polsce</div>
+  </div>
+  <div class="strip-item">
+    <div class="strip-label">Największy wzrost</div>
+    <div class="strip-val" style="color:var(--green)">+18</div>
+    <div class="strip-sub">Liceum Plastyczne (8.→25.)</div>
+  </div>
+  <div class="strip-item">
+    <div class="strip-label">Największy spadek</div>
+    <div class="strip-val" style="color:var(--red)">-17</div>
+    <div class="strip-sub">LO Plastyczne (8.→25.)</div>
+  </div>
+  <div class="strip-item">
+    <div class="strip-label">XV LO — pozycja 2026</div>
+    <div class="strip-val" style="color:var(--gold)">26.</div>
+    <div class="strip-sub">43,033 pkt rankingowych</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="go('overview',this)">📊 Przegląd zmian</div>
+  <div class="tab" onclick="go('bubbles',this)">🔵 Mapa pozycji</div>
+  <div class="tab" onclick="go('wzrosty',this)">📈 Zwycięzcy</div>
+  <div class="tab" onclick="go('spadki',this)">📉 Przegrani</div>
+  <div class="tab" onclick="go('xvkontekst',this)">🏫 XV LO vs rynek</div>
+  <div class="tab" onclick="go('wnioski',this)">💡 Wnioski</div>
+</div>
+
+<div class="content">
+
+<!-- ===== OVERVIEW ===== -->
+<div class="section active" id="overview">
+  <div class="sh">Pełna tabela zmian — licea publiczne</div>
+
+  <div class="hbox info">
+    <strong>Metodologia:</strong> Porównano pozycje liceów stacjonarnych (z wyłączeniem liceów dla dorosłych i specjalnych) między rankingiem 2025 (57 szkół) a 2026 (61 szkół). Zmiana = pozycja 2025 minus pozycja 2026 (wartość dodatnia = awans, ujemna = spadek).
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ranking porównawczy 2025 vs 2026 — licea stacjonarne Poznań</div>
+    <table class="dt" id="mainTable">
+      <thead>
+        <tr>
+          <th>Poz. 2026</th>
+          <th>Poz. 2025</th>
+          <th>Szkoła</th>
+          <th>Pkt 2026</th>
+          <th>Pkt 2025</th>
+          <th>Δ poz.</th>
+          <th>Δ pkt</th>
+          <th>Ocena</th>
+        </tr>
+      </thead>
+      <tbody id="mainTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== BUBBLES ===== -->
+<div class="section" id="bubbles">
+  <div class="sh">Wizualizacja zmian — pozycje 2025 vs 2026</div>
+
+  <div class="hbox gold">
+    <strong>Jak czytać wykres:</strong> Każda szkoła to punkt. Oś X = pozycja w 2025 r., oś Y = pozycja w 2026 r. Punkty <span style="color:#86efac">poniżej</span> przekątnej = awans. Punkty <span style="color:#fca5a5">powyżej</span> przekątnej = spadek. <span style="color:var(--gold)">Złoty punkt</span> = XV LO.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Scatter plot: pozycja 2025 (oś X) vs pozycja 2026 (oś Y)</div>
+    <svg id="scatter" viewBox="0 0 700 500" style="width:100%;overflow:visible"></svg>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Zmiana punktowa 2025→2026 według szkoły (tylko licea stacjonarne)</div>
+    <svg id="ptChange" viewBox="0 0 700 400" style="width:100%;overflow:visible"></svg>
+  </div>
+</div>
+
+<!-- ===== WZROSTY ===== -->
+<div class="section" id="wzrosty">
+  <div class="sh">Szkoły z największym awansem 2025→2026</div>
+
+  <div class="hbox good">
+    <strong>Kontekst:</strong> W 2026 r. w rankingu pojawiło się kilka nowych szkół (m.in. Spark Academy, Liceum FLEX, XXXVIII Dwujęzyczne, Chrześcijańskie LO), co mogło "wypychać" stare szkoły w dół mechanicznie. Mimo to kilka liceów zanotowało wyraźne awanse organiczne.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Top 10 największych awansów (pozycja w Poznaniu)</div>
+    <div id="topAwanse"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Największe wzrosty punktowe 2025→2026</div>
+    <div id="topPkt"></div>
+  </div>
+</div>
+
+<!-- ===== SPADKI ===== -->
+<div class="section" id="spadki">
+  <div class="sh">Szkoły z największym spadkiem 2025→2026</div>
+
+  <div class="hbox warn">
+    <strong>Ważne:</strong> Część spadków to tzw. efekt nowych wejść — 4 nowe szkoły w rankingu 2026 automatycznie przesuwają innych w dół. Prawdziwy spadek to ten, który idzie w parze ze <em>spadkiem punktów</em> — to dopiero jest sygnał słabnącej jakości.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Top 10 największych spadków pozycyjnych</div>
+    <div id="topSpadki"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Szkoły z największym spadkiem punktowym (realny regres)</div>
+    <div id="topSpadkiPkt"></div>
+  </div>
+</div>
+
+<!-- ===== XV KONTEKST ===== -->
+<div class="section" id="xvkontekst">
+  <div class="sh">XV LO — pozycja na tle grupy porównawczej</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Punkty rankingowe: XV LO vs sąsiedzi w tabeli 2026</div>
+      <div id="pointsCompare"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Trajektoria XV LO vs III LO i XVI LO (sąsiedzi z 2025)</div>
+      <svg id="trajSvg" viewBox="0 0 340 240" style="width:100%;overflow:visible"></svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Szkoły o podobnym profilu do XV LO — jak im poszło?</div>
+    <table class="dt">
+      <thead><tr><th>Szkoła</th><th>Pozycja 2025</th><th>Pozycja 2026</th><th>Zmiana</th><th>Pkt 2026</th><th>Sytuacja</th></tr></thead>
+      <tbody>
+        <tr><td>XI LO (Zembrzuskich)</td><td>18.</td><td>16.</td><td><span class="delta down">↑ +2</span></td><td>45,44</td><td><span class="badge green">Poprawa</span></td></tr>
+        <tr><td>XII LO (Skłodowska-Curie)</td><td>16.</td><td>17.</td><td><span class="delta neu">→ -1</span></td><td>45,39</td><td><span class="badge yellow">Stabilna</span></td></tr>
+        <tr><td>IX LO (Libelta)</td><td>11.</td><td>13.</td><td><span class="delta up">↓ -2</span></td><td>46,85</td><td><span class="badge yellow">Lekki spadek</span></td></tr>
+        <tr><td>XIV LO (Kazimierz Wielki)</td><td>29.</td><td>28.</td><td><span class="delta down">↑ +1</span></td><td>42,78</td><td><span class="badge green">Stabilna</span></td></tr>
+        <tr><td>XX LO (Gałczyński)</td><td>31.</td><td>29.</td><td><span class="delta down">↑ +2</span></td><td>41,58</td><td><span class="badge green">Poprawa</span></td></tr>
+        <tr class="xv-row"><td>⭐ XV LO (Dega)</td><td>15.</td><td>26.</td><td><span class="delta up">↓ -11</span></td><td>43,03</td><td><span class="badge red">Alarm</span></td></tr>
+        <tr><td>XXV LO (Zamoyska)</td><td>25.</td><td>21.</td><td><span class="delta down">↑ +4</span></td><td>44,39</td><td><span class="badge green">Wyraźna poprawa</span></td></tr>
+        <tr><td>IV LO (KEN)</td><td>23.</td><td>20.</td><td><span class="delta down">↑ +3</span></td><td>44,65</td><td><span class="badge green">Poprawa</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="hbox warn">
+    <strong>Kluczowy wniosek:</strong> Spośród 8 porównywalnych liceów w podobnej strefie rankingowej, <strong>7 utrzymało lub poprawiło</strong> swoją pozycję w 2026 r. XV LO zanotowało <strong>największy spadek wśród publicznych liceów ogólnokształcących</strong>. Uwaga: Liceum Plastyczne spadło jeszcze bardziej (-17 poz.), ale jako szkoła artystyczna funkcjonuje w odrębnej kategorii i rządzi się innymi prawami rankingowymi. To nie jest efekt strukturalny całego rynku — to problem specyficzny dla XV LO w grupie typowych liceów.
+  </div>
+</div>
+
+<!-- ===== WNIOSKI ===== -->
+<div class="section" id="wnioski">
+  <div class="sh">Wnioski końcowe</div>
+
+  <div class="g2">
+    <div>
+      <div class="hbox warn">
+        <strong>🔴 Problem specyficzny XV LO — ale nie jedyny</strong><br><br>
+        Inne porównywalne licea publiczne w Poznaniu (XI, XII, XIV, XX, XXV, IV LO) w 2026 r. <em>utrzymały lub poprawiły</em> swoje pozycje. XV LO zanotowało największy spadek <strong>wśród publicznych liceów ogólnokształcących</strong>.<br><br>
+        Warto odnotować, że <strong>Liceum Plastyczne spadło jeszcze mocniej</strong> (-17 poz., z 8. na 25.), ale jako szkoła artystyczna podlega innej strukturze matur i innych czynników rankingowych — nie jest bezpośrednio porównywalnym przypadkiem.
+      </div>
+
+      <div class="hbox gold">
+        <strong>⚠️ Część spadku to efekt nowych wejść</strong><br><br>
+        W rankingu 2026 pojawiły się 4 nowe licea stacjonarne (Spark Academy, FLEX, XXXVIII Dwujęzyczne, Chrześcijańskie LO), wszystkie sklasyfikowane między poz. 9–18. To mechanicznie obniża pozycje szkół poniżej nich. XV LO straciło przez to ok. 3–4 pozycji. Ale pozostałe 7–8 pozycji to realny regres.
+      </div>
+
+      <div class="hbox info">
+        <strong>ℹ️ Punkty nie kłamią</strong><br><br>
+        XV LO w 2025 r. miało <strong>45,503 pkt</strong> (15. miejsce). W 2026 r. ma <strong>43,033 pkt</strong> — to spadek o <strong>2,47 pkt</strong> w wartości absolutnej. Dla porównania XII LO: 45,174 pkt → 45,388 pkt (wzrost). To potwierdza, że XV LO realnie straciło na wartości rankingowej.
+      </div>
+    </div>
+
+    <div>
+      <div class="hbox good">
+        <strong>✅ Co chroni inne licea?</strong><br><br>
+        Szkoły, które awansowały lub utrzymały pozycję, cechują: silniejsze wyniki z przedmiotów rozszerzonych (zwłaszcza ścisłych), większa liczba zdających matury rozszerzone, stabilna kadra dydaktyczna, silny profil mat-fiz lub biol-chem przyciągający lepszych kandydatów.
+      </div>
+
+      <div class="hbox gold">
+        <strong>💡 Co to znaczy dla XV LO?</strong><br><br>
+        Szkoła <strong>nie jest w katastrofie</strong> — 26. miejsce wśród 61 liceów w Poznaniu to środek pola, nie dno. Punkty (43 pkt) sytuują ją w gęstym gronie szkół między poz. 21–30, gdzie różnice są minimalne (ok. 0,5–1 pkt). Jedna dobra matura może oznaczać powrót do top 20.
+      </div>
+
+      <div class="hbox info">
+        <strong>📌 Rekomendacja strategiczna</strong><br><br>
+        Kluczowe działania: wzmocnienie dydaktyczne z matematyki i chemii rozszerzonej, monitorowanie wyników EWD (edukacyjna wartość dodana), budowanie wizerunku przez mocne strony (języki, biologia). Rok 2027 to realny target powrotu do top 20 — jeśli matura 2026 pójdzie lepiej.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Podsumowanie: skala problemu XV LO na tle Poznania</div>
+    <table class="dt">
+      <thead><tr><th>Kategoria</th><th>Wartość</th><th>Kontekst</th></tr></thead>
+      <tbody>
+        <tr><td>Spadek pozycyjny 2025→2026</td><td><span class="badge red">-11 miejsc</span></td><td>Największy wśród publicznych liceów ogólnokształcących (LO Plastyczne: -17, ale szkoła artystyczna)</td></tr>
+        <tr><td>Spadek punktowy</td><td><span class="badge red">-2,47 pkt</span></td><td>Jedyny wśród top-20 z 2025 r., który tracił punkty</td></tr>
+        <tr><td>Efekt nowych wejść (szacunek)</td><td><span class="badge yellow">~3-4 miejsca</span></td><td>4 nowe szkoły między poz. 9-18 w 2026 r.</td></tr>
+        <tr><td>Realny organiczny spadek</td><td><span class="badge red">~7-8 miejsc</span></td><td>Poza efektem nowych wejść</td></tr>
+        <tr><td>Szkoły z podobnym spadkiem</td><td><span class="badge yellow">1 z 8 podobnych</span></td><td>LO Plastyczne (-17 poz.) — ale to szkoła artystyczna, inny kontekst</td></tr>
+        <tr><td>Odległość od top 20 w pkt</td><td><span class="badge yellow">~1,5 pkt</span></td><td>Bardzo mała różnica — jeden dobry rocznik wystarczy</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ===== DATA =====
+// [name_short, pos2026, pts2026, pos2025, pts2025, type]
+// type: public, private, art, sports, religious
+const schools = [
+  ['VIII LO (Mickiewicz)',1,69.698,1,67.857,'public'],
+  ['II LO (Modrzejewska)',2,67.238,2,64.602,'public'],
+  ['I LO (Marcinkowski)',3,61.299,3,59.862,'public'],
+  ['LO Marii Magdaleny',4,58.823,4,56.206,'religious'],
+  ['III LO (Jan Kanty)',5,52.935,6,51.682,'public'],
+  ['XVI LO (de Gaulle)',6,52.625,5,52.097,'public'],
+  ['VII LO (Dąbrówka)',7,50.204,9,50.468,'public'],
+  ['VI LO (Paderewski)',8,49.221,7,51.032,'public'],
+  ['Spark Academy',9,49.0,27,40.611,'private'],
+  ['XVII LO',10,48.328,12,47.385,'public'],
+  ['XXXVIII Dwujęz.',11,47.792,20,43.566,'public'],
+  ['V LO (Potocka)',12,47.074,14,45.99,'public'],
+  ['IX LO (Libelta)',13,46.846,11,47.931,'public'],
+  ['LO Salezjańskie',14,46.782,10,48.315,'religious'],
+  ['LO FLEX',15,45.91,null,null,'private'],
+  ['XI LO (Zembrzuskich)',16,45.439,18,44.483,'public'],
+  ['XII LO (Skłodowska)',17,45.388,16,45.174,'public'],
+  ['Chr. LO (Król Dawid)',18,45.215,24,42.089,'religious'],
+  ['LO Romka Strzałk.',19,44.827,21,43.109,'religious'],
+  ['IV LO (KEN)',20,44.646,23,42.658,'public'],
+  ['XXV LO (Zamoyska)',21,44.388,25,41.699,'public'],
+  ['LO Pijarów',22,43.737,26,41.324,'religious'],
+  ['XXXIX LO (Urszulanki)',23,43.711,22,42.719,'religious'],
+  ['LO KSW (Tułasiewicz)',24,43.554,13,46.461,'religious'],
+  ['LO Plastyczne',25,43.499,8,50.728,'art'],
+  ['XV LO (Dega)',26,43.033,15,45.503,'public'],
+  ['LO Da Vinci',27,43.018,19,44.471,'private'],
+  ['XIV LO (Kazim. Wielki)',28,42.784,29,39.537,'public'],
+  ['XX LO (Gałczyński)',29,41.577,31,38.086,'public'],
+  ['LO Linde',30,40.913,30,39.012,'private'],
+  ['X LO (Przemysł II)',31,40.791,28,40.005,'public'],
+  ['XXI LO (Anders)',32,40.596,34,34.629,'public'],
+];
+
+// compute delta
+schools.forEach(s=>{
+  s.push(s[3] !== null ? s[3]-s[1] : null); // deltaPos (positive = improved)
+  s.push(s[4] !== null ? s[2]-s[4] : null); // deltaPts
+});
+// indices: 0=name, 1=pos26, 2=pts26, 3=pos25, 4=pts25, 5=type, 6=deltaPos, 7=deltaPts
+
+function posColor(d){
+  if(d===null) return 'blue';
+  if(d>3) return 'green';
+  if(d>0) return 'teal';
+  if(d===0) return 'yellow';
+  if(d>=-3) return 'yellow';
+  return 'red';
+}
+
+function deltaStr(d){
+  if(d===null) return '<span class="badge blue">Nowa</span>';
+  if(d>0) return `<span class="delta down">↑ +${d}</span>`;
+  if(d<0) return `<span class="delta up">↓ ${d}</span>`;
+  return `<span class="delta neu">→ 0</span>`;
+}
+function deltaPtsStr(d){
+  if(d===null) return '—';
+  const s = d>=0?'+':'';
+  const cl = d>0?'down':d<0?'up':'neu';
+  return `<span class="delta ${cl}">${s}${d.toFixed(2)}</span>`;
+}
+
+// ===== MAIN TABLE =====
+function buildMainTable(){
+  const tbody = document.getElementById('mainTbody');
+  let html='';
+  schools.forEach(s=>{
+    const isXV = s[0].includes('XV LO');
+    html+=`<tr class="${isXV?'xv-row highlight':''}">
+      <td><span class="rank-num">${s[1]}</span></td>
+      <td>${s[3]!==null?s[3]:'<span class="badge blue">Nowa</span>'}</td>
+      <td>${isXV?'⭐ ':''}<strong>${s[0]}</strong></td>
+      <td><span style="font-family:'JetBrains Mono',monospace">${s[2].toFixed(3)}</span></td>
+      <td><span style="font-family:'JetBrains Mono',monospace;color:var(--muted)">${s[4]!==null?s[4].toFixed(3):'—'}</span></td>
+      <td>${deltaStr(s[6])}</td>
+      <td>${deltaPtsStr(s[7])}</td>
+      <td><span class="badge ${posColor(s[6])}">${s[6]===null?'Nowa':s[6]>3?'Awans':s[6]>0?'Lekki awans':s[6]===0?'Stabilna':s[6]>=-3?'Lekki spadek':'Spadek'}</span></td>
+    </tr>`;
+  });
+  tbody.innerHTML=html;
+}
+
+// ===== SCATTER =====
+function buildScatter(){
+  const svg = document.getElementById('scatter');
+  const pad={l:50,r:20,t:20,b:50};
+  const W=700,H=500;
+  const w=W-pad.l-pad.r, h=H-pad.t-pad.b;
+  const maxPos=35;
+  const xs = s => pad.l + ((s[3]||33)-1)/(maxPos-1)*w;
+  const ys = s => pad.t + (s[1]-1)/(maxPos-1)*h;
+
+  let html='';
+  // diagonal line (equal)
+  html+=`<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l+w}" y2="${pad.t+h}" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="4,4"/>`;
+  // labels
+  html+=`<text x="${pad.l+w/2}" y="${H-8}" text-anchor="middle" fill="#6b7a99" font-size="11" font-family="Sora,sans-serif">Pozycja w rankingu 2025 →</text>`;
+  html+=`<text x="14" y="${pad.t+h/2}" text-anchor="middle" fill="#6b7a99" font-size="11" font-family="Sora,sans-serif" transform="rotate(-90,14,${pad.t+h/2})">Pozycja w rankingu 2026 →</text>`;
+  // grid
+  [1,5,10,15,20,25,30].forEach(v=>{
+    const gx = pad.l + (v-1)/(maxPos-1)*w;
+    const gy = pad.t + (v-1)/(maxPos-1)*h;
+    html+=`<line x1="${gx}" y1="${pad.t}" x2="${gx}" y2="${pad.t+h}" stroke="rgba(255,255,255,0.04)"/>`;
+    html+=`<line x1="${pad.l}" y1="${gy}" x2="${pad.l+w}" y2="${gy}" stroke="rgba(255,255,255,0.04)"/>`;
+    html+=`<text x="${gx}" y="${pad.t+h+14}" text-anchor="middle" fill="#6b7a99" font-size="10">${v}</text>`;
+    html+=`<text x="${pad.l-6}" y="${gy+4}" text-anchor="end" fill="#6b7a99" font-size="10">${v}</text>`;
+  });
+
+  // area labels
+  html+=`<text x="${pad.l+30}" y="${pad.t+h-10}" fill="rgba(34,197,94,0.4)" font-size="10" font-family="Sora">▲ Awans</text>`;
+  html+=`<text x="${pad.l+w-60}" y="${pad.t+20}" fill="rgba(239,68,68,0.4)" font-size="10" font-family="Sora">▼ Spadek</text>`;
+
+  schools.forEach(s=>{
+    if(s[3]===null) return;
+    const x=xs(s), y=ys(s);
+    const isXV=s[0].includes('XV LO');
+    const col = isXV?'#f0b429': s[6]>0?'#22c55e': s[6]<0?'#ef4444':'#6b7a99';
+    const r = isXV?9:6;
+    html+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" fill-opacity="${isXV?1:0.7}" stroke="${isXV?'#fff':'none'}" stroke-width="${isXV?2:0}"/>`;
+    if(isXV||s[6]<=-5||s[6]>=8){
+      const label = s[0].split(' ')[0]+' '+s[0].split(' ')[1];
+      html+=`<text x="${x+r+3}" y="${y+4}" fill="${col}" font-size="9.5" font-family="Sora">${label}</text>`;
+    }
+  });
+  svg.innerHTML=html;
+}
+
+// ===== POINT CHANGE CHART =====
+function buildPtChange(){
+  const filtered = schools.filter(s=>s[7]!==null).sort((a,b)=>b[7]-a[7]);
+  const svg = document.getElementById('ptChange');
+  const pad={l:160,r:80,t:20,b:30};
+  const W=700, H=400;
+  const bh=10, gap=4;
+  const totalH = filtered.length*(bh+gap);
+  const maxAbs = Math.max(...filtered.map(s=>Math.abs(s[7])));
+  const trackW = W-pad.l-pad.r;
+  const midX = pad.l + trackW/2;
+
+  let html='';
+  filtered.forEach((s,i)=>{
+    const y = pad.t + i*(bh+gap);
+    const isXV=s[0].includes('XV LO');
+    const barW = Math.abs(s[7])/maxAbs*(trackW/2);
+    const col = s[7]>0?'#22c55e':'#ef4444';
+    const x = s[7]>=0 ? midX : midX-barW;
+    html+=`<rect x="${x}" y="${y}" width="${barW}" height="${bh}" fill="${col}" fill-opacity="${isXV?1:0.65}" rx="2"/>`;
+    html+=`<text x="${pad.l-6}" y="${y+bh-1}" text-anchor="end" fill="${isXV?'#f0b429':'#8899b5'}" font-size="9.5" font-family="Sora" font-weight="${isXV?700:400}">${isXV?'⭐ ':''}${s[0]}</text>`;
+    const valX = s[7]>=0 ? x+barW+4 : x-4;
+    const anchor = s[7]>=0 ? 'start':'end';
+    const sign = s[7]>0?'+':'';
+    html+=`<text x="${valX}" y="${y+bh-1}" text-anchor="${anchor}" fill="${col}" font-size="9" font-family="JetBrains Mono,monospace">${sign}${s[7].toFixed(2)}</text>`;
+  });
+  // center line
+  html+=`<line x1="${midX}" y1="${pad.t-5}" x2="${midX}" y2="${pad.t+totalH}" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>`;
+  html+=`<text x="${midX}" y="${pad.t-8}" text-anchor="middle" fill="#6b7a99" font-size="10">0</text>`;
+
+  svg.setAttribute('viewBox',`0 0 ${W} ${pad.t+totalH+pad.b}`);
+  svg.innerHTML=html;
+}
+
+// ===== TOP AWANSE / SPADKI =====
+function buildTopLists(){
+  const withDelta = schools.filter(s=>s[6]!==null);
+  const sorted = [...withDelta].sort((a,b)=>b[6]-a[6]);
+  const top10up = sorted.slice(0,10);
+  const top10dn = sorted.slice(-10).reverse();
+  const sortedPts = [...withDelta].filter(s=>s[7]!==null).sort((a,b)=>b[7]-a[7]);
+  const top10ptsUp = sortedPts.slice(0,10);
+  const top10ptsDn = sortedPts.slice(-10).reverse();
+
+  function buildBarList(items, el, field, isGood){
+    const max = Math.max(...items.map(s=>Math.abs(s[field])));
+    let html='';
+    items.forEach(s=>{
+      const isXV=s[0].includes('XV LO');
+      const v=s[field]; const pct=Math.abs(v)/max*100;
+      const col = isGood?(v>0?'#22c55e':'#ef4444'):(v<0?'#ef4444':'#22c55e');
+      const sign = v>0?'+':'';
+      html+=`<div class="hbar">
+        <div class="hbar-label">
+          <span style="color:${isXV?'#f0b429':'var(--text)'};font-weight:${isXV?700:400}">${isXV?'⭐ ':''}${s[0]}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${col}">${sign}${typeof v==='number'&&field===7?v.toFixed(2):v}</span>
+        </div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${col}"></div></div>
+      </div>`;
+    });
+    document.getElementById(el).innerHTML=html;
+  }
+
+  buildBarList(top10up,'topAwanse',6,true);
+  buildBarList(top10ptsUp,'topPkt',7,true);
+  buildBarList(top10dn,'topSpadki',6,false);
+  buildBarList(top10ptsDn,'topSpadkiPkt',7,false);
+}
+
+// ===== POINTS COMPARE =====
+function buildPointsCompare(){
+  const nearby = schools.filter(s=>s[1]>=22&&s[1]<=30);
+  const el=document.getElementById('pointsCompare');
+  const max=45.5;
+  let html='';
+  nearby.forEach(s=>{
+    const isXV=s[0].includes('XV LO');
+    const pct=s[2]/max*100;
+    const col=isXV?'#f0b429':'#3b82f6';
+    html+=`<div class="hbar">
+      <div class="hbar-label">
+        <span style="color:${isXV?'#f0b429':'var(--text)'};font-weight:${isXV?700:400}">${s[1]}. ${s[0]}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${col}">${s[2].toFixed(3)} pkt</span>
+      </div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${col};opacity:${isXV?1:0.7}"></div></div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+// ===== TRAJECTORY MINI =====
+function buildTraj(){
+  const svg=document.getElementById('trajSvg');
+  const series=[
+    {name:'VIII LO',   v2025:1,  v2026:1,  col:'#f0b429'},
+    {name:'XVI LO',    v2025:5,  v2026:6,  col:'#22c55e'},
+    {name:'III LO',    v2025:6,  v2026:5,  col:'#3b82f6'},
+    {name:'XV LO ⭐',  v2025:15, v2026:26, col:'#ef4444'},
+    {name:'XII LO',    v2025:16, v2026:17, col:'#a78bfa'},
+    {name:'XI LO',     v2025:18, v2026:16, col:'#14b8a6'},
+  ];
+  const W=340,H=240,pad={l:30,r:20,t:20,b:40};
+  const w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+  const maxV=30;
+  const x1=pad.l, x2=pad.l+w;
+  let html='';
+  // grid
+  [5,10,15,20,25,30].forEach(v=>{
+    const y=pad.t+(v-1)/(maxV-1)*h;
+    html+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+w}" y2="${y}" stroke="rgba(255,255,255,0.05)"/>`;
+    html+=`<text x="${pad.l-4}" y="${y+4}" text-anchor="end" fill="#6b7a99" font-size="9">${v}</text>`;
+  });
+  html+=`<text x="${x1}" y="${H-8}" text-anchor="middle" fill="#6b7a99" font-size="9">2025</text>`;
+  html+=`<text x="${x2}" y="${H-8}" text-anchor="middle" fill="#6b7a99" font-size="9">2026</text>`;
+
+  series.forEach(s=>{
+    const y1=pad.t+(s.v2025-1)/(maxV-1)*h;
+    const y2=pad.t+(s.v2026-1)/(maxV-1)*h;
+    const isXV=s.name.includes('XV');
+    html+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${s.col}" stroke-width="${isXV?3:1.5}" stroke-opacity="${isXV?1:0.6}"/>`;
+    html+=`<circle cx="${x1}" cy="${y1}" r="${isXV?5:3}" fill="${s.col}" fill-opacity="${isXV?1:0.7}"/>`;
+    html+=`<circle cx="${x2}" cy="${y2}" r="${isXV?5:3}" fill="${s.col}" fill-opacity="${isXV?1:0.7}"/>`;
+    html+=`<text x="${x2+5}" y="${y2+4}" fill="${s.col}" font-size="9" font-family="Sora" font-weight="${isXV?700:400}">${s.name}</text>`;
+  });
+  svg.innerHTML=html;
+}
+
+// ===== TAB NAV =====
+function go(id, el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if(id==='bubbles'){ buildScatter(); buildPtChange(); }
+  if(id==='wzrosty'||id==='spadki') buildTopLists();
+  if(id==='xvkontekst'){ buildPointsCompare(); buildTraj(); }
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded',()=>{
+  buildMainTable();
+  buildTopLists();
+  buildPointsCompare();
+  buildTraj();
+});
+</script>
+</body>
+</html>
